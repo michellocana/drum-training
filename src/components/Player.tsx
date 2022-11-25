@@ -4,7 +4,7 @@ import useMoment from '../hooks/useMoment'
 import usePlayer from '../hooks/usePlayer'
 
 export default function Player() {
-  const { startLoop } = usePlayer()
+  const { startLoop, setIsReady } = usePlayer()
   const { currentMoment } = useMoment()
 
   return (
@@ -12,7 +12,7 @@ export default function Player() {
       ref={playerRef}
       videoId='InFbBlpDTfQ'
       opts={{ playerVars: { end: currentMoment?.end } }}
-      onReady={() => startLoop()}
+      onReady={() => setIsReady(true)}
       onEnd={() => startLoop()}
     />
   )

@@ -1,4 +1,5 @@
 import './App.css'
+import Controls from './components/Controls'
 import MomentButton from './components/MomentButton'
 import Player from './components/Player'
 import MomentProvider, { MomentContext } from './contexts/MomentProvider'
@@ -13,6 +14,7 @@ export default function App() {
             <section className='App'>
               <div className='App-container'>
                 <Player />
+                <Controls />
 
                 <ul>
                   {moments.map((moment, index) => (

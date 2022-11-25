@@ -1,24 +1,49 @@
-import { createContext, createRef, PropsWithChildren, useCallback, useMemo } from 'react'
+import {
+  createContext,
+  createRef,
+  PropsWithChildren,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react'
 import YouTube from 'react-youtube'
 import useMoment from '../hooks/useMoment'
-import { PlayerContextType } from '../types/player'
+import { PlayerContextType, YoutubePlayer } from '../types/player'
 
 export const PlayerContext = createContext<PlayerContextType>({
   startLoop: () => {},
+  isReady: false,
+  setIsReady: () => {},
 })
 
 export const playerRef = createRef<YouTube>()
 
 export default function PlayerProvider({ children }: PropsWithChildren) {
   const { currentMoment } = useMoment()
+  const [isReady, setIsReady] = useState(false)
+
+  const getYoutubePlayer = useCallback(() => {
+    return playerRef.current?.getInternalPlayer() as YoutubePlayer | undefined
+  }, [])
 
   const startLoop = useCallback(() => {
     if (currentMoment) {
-      playerRef.current?.getInternalPlayer().seekTo(currentMoment.start)
+      const youtubePlayer = getYoutubePlayer()
+      youtubePlayer?.seekTo(currentMoment.start)
     }
-  }, [currentMoment])
+  }, [currentMoment, getYoutubePlayer])
 
-  const context = useMemo<PlayerContextType>(() => ({ startLoop }), [startLoop])
+  useEffect(() => {
+    if (isReady) {
+      startLoop()
+    }
+  }, [isReady, startLoop])
+
+  const context = useMemo<PlayerContextType>(
+    () => ({ startLoop, isReady, setIsReady }),
+    [isReady, startLoop],
+  )
 
   return <PlayerContext.Provider value={context}>{children}</PlayerContext.Provider>
 }
