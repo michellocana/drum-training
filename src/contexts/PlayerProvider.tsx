@@ -64,6 +64,7 @@ export default function PlayerProvider({ children }: PropsWithChildren) {
 
       setCurrentVideoInfo({
         id: currentVideoId,
+        time: (await player?.getCurrentTime()) ?? 0,
         duration: (await player?.getDuration()) ?? 0,
         thumb: `https://img.youtube.com/vi/${currentVideoId}/0.jpg`,
       })
@@ -73,6 +74,54 @@ export default function PlayerProvider({ children }: PropsWithChildren) {
       getInfo()
     }
   }, [isReady, currentVideoId, getInternalPlayer])
+
+  useEffect(() => {
+    let timeoutId: number
+    let intervalId: number
+
+    async function updateTime() {
+      const player = getInternalPlayer()
+      const currentTime = await player?.getCurrentTime()
+
+      if (!currentTime) {
+        return
+      }
+
+      // Waiting for next second so the actual player and our state get as in sync as possible
+      const timeToNextSecond = (currentTime - Math.round(currentTime)) * 1000
+
+      setTimeout(() => {
+        intervalId = window.setInterval(async () => {
+          const currentTime = (await player?.getCurrentTime()) ?? 0
+          setCurrentVideoInfo((currentState) => {
+            if (currentState) {
+              return {
+                ...currentState,
+                time: currentTime,
+              }
+            }
+          })
+        }, 1000)
+      }, timeToNextSecond)
+
+      console.log()
+    }
+
+    function unsubscribe() {
+      if (timeoutId) {
+        clearTimeout(timeoutId)
+      }
+
+      if (intervalId) {
+        clearInterval(intervalId)
+      }
+    }
+
+    if (isPlaying) {
+      updateTime()
+      return () => unsubscribe()
+    }
+  }, [getInternalPlayer, isPlaying])
 
   return (
     <PlayerContext.Provider

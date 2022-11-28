@@ -1,8 +1,11 @@
+import { useDurationLabel } from '../hooks/useDurationLabel'
 import usePlayer from '../hooks/usePlayer'
 import { PLAYBACK_RATES } from '../types/player'
 
 export default function Controls() {
-  const { setPlaybackRate, togglePlay, isPlaying } = usePlayer()
+  const { setPlaybackRate, togglePlay, isPlaying, currentVideoInfo } = usePlayer()
+  const currentDuration = useDurationLabel(currentVideoInfo?.time ?? 0)
+  const totalDuration = useDurationLabel(currentVideoInfo?.duration ?? 0)
 
   return (
     <ul>
@@ -13,6 +16,12 @@ export default function Controls() {
             {rate}x
           </button>
         ))}
+      </li>
+      <li>
+        {currentDuration} / {totalDuration}
+      </li>
+      <li>
+        <pre>{JSON.stringify(currentVideoInfo, null, 2)}</pre>
       </li>
     </ul>
   )

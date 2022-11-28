@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 
-export function useMomentLabel(time: number) {
+export function useDurationLabel(time: number) {
   return useMemo(() => {
     const roundedTime = Math.round(time)
     const minutes = Math.floor(roundedTime / 60)

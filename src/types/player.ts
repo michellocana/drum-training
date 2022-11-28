@@ -17,12 +17,14 @@ export type YoutubePlayer = {
   setPlaybackRate(rate: number): void
   playVideo(): void
   pauseVideo(): void
-  getDuration(): number
-  getCurrentTime(): number
+  getDuration(): Promise<number>
+  getCurrentTime(): Promise<number>
+  addEventListener(event: string, listener: (event: { data: unknown }) => void): void
 }
 
 export type VideoInfo = {
   id: string
+  time: number
   duration: number
   thumb: string
 }
