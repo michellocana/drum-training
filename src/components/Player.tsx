@@ -4,13 +4,13 @@ import useMoment from '../hooks/useMoment'
 import usePlayer from '../hooks/usePlayer'
 
 export default function Player() {
-  const { startLoop, setIsReady, setIsPlaying } = usePlayer()
+  const { currentVideoId, startLoop, setIsReady, setIsPlaying } = usePlayer()
   const { currentMoment } = useMoment()
 
   return (
     <YouTube
       ref={playerRef}
-      videoId='InFbBlpDTfQ'
+      videoId={currentVideoId}
       opts={{ playerVars: { end: currentMoment?.end, modestbranding: 1 } }}
       onReady={() => setIsReady(true)}
       onEnd={() => startLoop()}

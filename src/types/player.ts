@@ -8,6 +8,8 @@ export type PlayerContextType = {
   setIsReady: Dispatch<SetStateAction<boolean>>
   isPlaying: boolean
   isReady: boolean
+  currentVideoId?: string
+  currentVideoInfo?: VideoInfo
 }
 
 export type YoutubePlayer = {
@@ -15,6 +17,14 @@ export type YoutubePlayer = {
   setPlaybackRate(rate: number): void
   playVideo(): void
   pauseVideo(): void
+  getDuration(): number
+  getCurrentTime(): number
+}
+
+export type VideoInfo = {
+  id: string
+  duration: number
+  thumb: string
 }
 
 export const PLAYBACK_RATES = ['0.25', '0.5', '0.75', '1', '1.25', '1.5', '1.75', '2'] as const

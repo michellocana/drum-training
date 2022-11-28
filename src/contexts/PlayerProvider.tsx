@@ -8,7 +8,7 @@ import {
 } from 'react'
 import YouTube from 'react-youtube'
 import useMoment from '../hooks/useMoment'
-import { PlaybackRate, PlayerContextType, YoutubePlayer } from '../types/player'
+import { PlaybackRate, PlayerContextType, VideoInfo, YoutubePlayer } from '../types/player'
 
 export const PlayerContext = createContext<PlayerContextType>({
   startLoop: () => {},
@@ -24,6 +24,8 @@ export const playerRef = createRef<YouTube>()
 
 export default function PlayerProvider({ children }: PropsWithChildren) {
   const { currentMoment } = useMoment()
+  const [currentVideoId] = useState('InFbBlpDTfQ')
+  const [currentVideoInfo, setCurrentVideoInfo] = useState<VideoInfo>()
   const [isReady, setIsReady] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
   const getInternalPlayer = useCallback(() => {
@@ -32,22 +34,22 @@ export default function PlayerProvider({ children }: PropsWithChildren) {
 
   const startLoop = useCallback(() => {
     if (currentMoment) {
-      const youtubePlayer = getInternalPlayer()
-      youtubePlayer?.seekTo(currentMoment.start)
+      const player = getInternalPlayer()
+      player?.seekTo(currentMoment.start)
     }
   }, [currentMoment, getInternalPlayer])
 
   const setPlaybackRate = useCallback(
     (rate: PlaybackRate) => {
-      const youtubePlayer = getInternalPlayer()
-      youtubePlayer?.setPlaybackRate(Number(rate))
+      const player = getInternalPlayer()
+      player?.setPlaybackRate(Number(rate))
     },
     [getInternalPlayer],
   )
 
   const togglePlay = useCallback(() => {
-    const youtubePlayer = getInternalPlayer()
-    youtubePlayer?.[isPlaying ? 'pauseVideo' : 'playVideo']()
+    const player = getInternalPlayer()
+    player?.[isPlaying ? 'pauseVideo' : 'playVideo']()
   }, [getInternalPlayer, isPlaying])
 
   useEffect(() => {
@@ -56,9 +58,27 @@ export default function PlayerProvider({ children }: PropsWithChildren) {
     }
   }, [isReady, startLoop])
 
+  useEffect(() => {
+    async function getInfo() {
+      const player = getInternalPlayer()
+
+      setCurrentVideoInfo({
+        id: currentVideoId,
+        duration: (await player?.getDuration()) ?? 0,
+        thumb: `https://img.youtube.com/vi/${currentVideoId}/0.jpg`,
+      })
+    }
+
+    if (isReady && currentVideoId) {
+      getInfo()
+    }
+  }, [isReady, currentVideoId, getInternalPlayer])
+
   return (
     <PlayerContext.Provider
       value={{
+        currentVideoId,
+        currentVideoInfo,
         startLoop,
         setPlaybackRate,
         togglePlay,
