@@ -20,9 +20,6 @@ export default function Controls() {
       <li>
         {currentDuration} / {totalDuration}
       </li>
-      <li>
-        <pre>{JSON.stringify(currentVideoInfo, null, 2)}</pre>
-      </li>
     </ul>
   )
 }

@@ -52,12 +52,14 @@ export default function PlayerProvider({ children }: PropsWithChildren) {
     player?.[isPlaying ? 'pauseVideo' : 'playVideo']()
   }, [getInternalPlayer, isPlaying])
 
+  // Initial loop control
   useEffect(() => {
     if (isReady) {
       startLoop()
     }
   }, [isReady, startLoop])
 
+  // Current video info update
   useEffect(() => {
     async function getInfo() {
       const player = getInternalPlayer()
@@ -75,6 +77,7 @@ export default function PlayerProvider({ children }: PropsWithChildren) {
     }
   }, [isReady, currentVideoId, getInternalPlayer])
 
+  // Time update
   useEffect(() => {
     let timeoutId: number
     let intervalId: number
