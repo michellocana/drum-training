@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/drum-training/static/css/main.e6c13ad2.css",
+    "main.js": "/drum-training/static/js/main.0379db8e.js",
+    "index.html": "/drum-training/index.html",
+    "main.e6c13ad2.css.map": "/drum-training/static/css/main.e6c13ad2.css.map",
+    "main.0379db8e.js.map": "/drum-training/static/js/main.0379db8e.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.e6c13ad2.css",
+    "static/js/main.0379db8e.js"
+  ]
+}
