@@ -1,13 +1,13 @@
 import { User } from 'firebase/auth'
 
 export type FirebaseUser = User | null
-
-export type Optin = {} | null
+export type Optin = { firstName: string } | null
+export type FullUser = User & Partial<Optin>
 
 export type FirebaseContextType = {
   auth: {
-    user: FirebaseUser
-    optin: Optin
+    user: FullUser | null
+    hasOptin: boolean
     isLogged: boolean
     login(email: string, password: string): Promise<User | void>
     logout(): Promise<void>

@@ -12,7 +12,7 @@ import {
   useState,
 } from 'react'
 import { FIREBASE_CONFIG } from '../constants/firebase'
-import { FirebaseContextType, FirebaseUser, Optin } from '../types/firebase'
+import { FirebaseContextType, FullUser, Optin } from '../types/firebase'
 import { useLocation, Navigate } from 'react-router-dom'
 import { ROUTES, UNLOGGED_ROUTES } from '../constants/routes'
 
@@ -21,7 +21,7 @@ const noop = async () => {}
 const FirebaseContext = createContext<FirebaseContextType>({
   auth: {
     user: null,
-    optin: null,
+    hasOptin: false,
     isLogged: false,
     login: noop,
     logout: noop,
@@ -36,7 +36,7 @@ initializeApp(FIREBASE_CONFIG)
 
 export default function FirebaseProvider({ children }: PropsWithChildren) {
   const [isReady, setIsReady] = useState(false)
-  const [user, setUser] = useState<FirebaseUser>(null)
+  const [user, setUser] = useState<FullUser | null>(null)
   const [optin, setOptin] = useState<Optin>(null)
   const database = useMemo(() => firebaseDb.getDatabase(), [])
   const auth = useMemo(() => firebaseAuth.getAuth(), [])
@@ -103,12 +103,15 @@ export default function FirebaseProvider({ children }: PropsWithChildren) {
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
       if (user) {
-        const optinData = await readFromDatabase(`users/${user.uid}/optin`)
-        setOptin(optinData)
-      }
+        const optinData: Optin = await readFromDatabase(`users/${user.uid}/optin`)
 
+        setIsReady(true)
+        setOptin(optinData)
+        setUser({ ...user, ...optinData })
+      } else {
       setIsReady(true)
       setUser(user)
+      }
     })
 
     return () => unsubscribe()
@@ -135,7 +138,7 @@ export default function FirebaseProvider({ children }: PropsWithChildren) {
           logout,
           isLogged,
           user,
-          optin,
+          hasOptin,
         },
         database: {
           read: readFromDatabase,

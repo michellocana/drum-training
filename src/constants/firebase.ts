@@ -27,7 +27,7 @@ export const FIREBASE_AUTH_ERRORS: Record<string, string> = {
     'already used or the domain associated with it does not match the list ' +
     'of whitelisted domains.',
   [AuthErrorCodes.CODE_EXPIRED]:
-    'The SMS code has expired. Please re-send the verification code to try ' + 'again.',
+    'The SMS code has expired. Please re-send the verification code to try again.',
   [AuthErrorCodes.CORDOVA_NOT_READY]: 'Cordova framework is not ready.',
   [AuthErrorCodes.CORS_UNSUPPORTED]: 'This browser is not supported.',
   [AuthErrorCodes.CREDENTIAL_ALREADY_IN_USE]:
@@ -89,7 +89,7 @@ export const FIREBASE_AUTH_ERRORS: Record<string, string> = {
     'EmailAuthProvider is not supported for this operation. This operation ' +
     'only supports OAuth providers.',
   [AuthErrorCodes.INVALID_OAUTH_CLIENT_ID]:
-    'The OAuth client ID provided is either invalid or does not match the ' + 'specified API key.',
+    'The OAuth client ID provided is either invalid or does not match the specified API key.',
   [AuthErrorCodes.INVALID_ORIGIN]:
     'This domain is not authorized for OAuth operations for your Firebase ' +
     'project. Edit the list of authorized domains from the Firebase console.',
@@ -186,7 +186,7 @@ export const FIREBASE_AUTH_ERRORS: Record<string, string> = {
   [AuthErrorCodes.TOKEN_EXPIRED]:
     "The user's credential is no longer valid. The user must sign in again.",
   [AuthErrorCodes.TOO_MANY_ATTEMPTS_TRY_LATER]:
-    'We have blocked all requests from this device due to unusual activity. ' + 'Try again later.',
+    'We have blocked all requests from this device due to unusual activity. Try again later.',
   [AuthErrorCodes.UNAUTHORIZED_DOMAIN]:
     'The domain of the continue URL is not whitelisted.  Please whitelist ' +
     'the domain in the Firebase console.',

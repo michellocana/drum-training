@@ -8,7 +8,9 @@ import PlayerProvider from '../contexts/PlayerProvider'
 import s from './Training.module.css'
 
 export default function Training() {
-  const { logout } = useAuth()
+  const { logout, user } = useAuth()
+
+  console.log(user?.firstName)
 
   return (
     <MomentProvider>

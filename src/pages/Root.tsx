@@ -21,7 +21,7 @@ const OptinSchema = Yup.object().shape({
 export default function Root() {
   const auth = useAuth()
   const database = useDatabase()
-  const isOptinNeeded = auth.isLogged && !auth.optin
+  const isOptinNeeded = auth.isLogged && !auth.hasOptin
 
   if (!isOptinNeeded) {
     return (
