@@ -1,11 +1,41 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
-    'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+:root {
+  /* Blue */
+  --blue-800: #033160;
+  --blue-700: #065299;
+  --blue-600: #0972d3;
+  --blue-500: #539fe5;
+  --blue-400: #89bdee;
+  --blue-300: #b5d6f4;
+  --blue-200: #d3e7f9;
+  --blue-100: #f2f8fd;
+
+  /* Green */
+  --green-600: #037f0c;
+  --green-100: #f2fcf3;
+
+  /* Grey */
+  --grey-900: #000716;
+  --grey-800: #0f1b2a;
+  --grey-750: #192534;
+  --grey-650: #354150;
+  --grey-600: #414d5c;
+  --grey-550: #5f6b7a;
+  --grey-500: #7d8998;
+  --grey-450: #8d99a8;
+  --grey-400: #9ba7b6;
+  --grey-300: #d1b5db;
+  --grey-200: #e9ebed;
+  --grey-150: #f4f4f4;
+  --grey-100: #fbfbfb;
+
+  /* Red */
+  --red-600: #d91515;
+  --red-500: #eb6f6f;
+  --red-100: #fff7f7;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+body {
+  margin: 0;
+  font-family: 'Open Sans', sans-serif;
+  background: var(--grey-750);
 }
