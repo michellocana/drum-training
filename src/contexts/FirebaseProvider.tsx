@@ -109,8 +109,8 @@ export default function FirebaseProvider({ children }: PropsWithChildren) {
         setOptin(optinData)
         setUser({ ...user, ...optinData })
       } else {
-      setIsReady(true)
-      setUser(user)
+        setIsReady(true)
+        setUser(user)
       }
     })
 
@@ -158,3 +158,29 @@ export function useAuth() {
 export function useDatabase() {
   return useContext(FirebaseContext).database
 }
+
+// TODO use this in training page
+//        <button
+//     onClick={() => {
+//       if (user) {
+//         const track: Track = {
+//           youtubeId: 'InFbBlpDTfQ',
+//           moments: [
+//             {
+//               name: 'Moment 1',
+//               start: 98,
+//               end: 108,
+//             },
+//             {
+//               name: 'Moment 1 extended',
+//               start: 88,
+//               end: 118,
+//             },
+//           ],
+//         }
+//         database.write(`tracks/midnightInAPerfectWorld`, track)
+//       }
+//     }}
+//   >
+//     save track
+//   </button>

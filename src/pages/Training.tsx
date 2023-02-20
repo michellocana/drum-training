@@ -1,37 +1,38 @@
-import Controls from '../components/Controls'
-import MomentButton from '../components/MomentButton'
-import Player from '../components/Player'
+import ProfilePicture from '../components/User/ProfilePicture'
 import { useAuth } from '../contexts/FirebaseProvider'
-import MomentProvider, { MomentContext } from '../contexts/MomentProvider'
-import PlayerProvider from '../contexts/PlayerProvider'
-
-import s from './Training.module.css'
 
 export default function Training() {
-  const { logout, user } = useAuth()
-
-  console.log(user?.firstName)
+  const { user } = useAuth()
 
   return (
-    <MomentProvider>
-      <button onClick={logout}>logout</button>
-      <MomentContext.Consumer>
-        {({ moments }) => (
-          <PlayerProvider>
-            <section className={s.container}>
-              <Player />
-              <Controls />
-              <ul>
-                {moments.map((moment, index) => (
-                  <li key={index}>
-                    <MomentButton moment={moment} />
-                  </li>
-                ))}
-              </ul>
-            </section>
-          </PlayerProvider>
-        )}
-      </MomentContext.Consumer>
-    </MomentProvider>
+    <ul style={{ color: 'white' }}>
+      <li>{user?.firstName}</li>
+      <li>
+        <ProfilePicture />
+      </li>
+    </ul>
   )
+
+  // return (
+  //   <MomentProvider>
+  //     <button onClick={logout}>logout</button>
+  //     <MomentContext.Consumer>
+  //       {({ moments }) => (
+  //         <PlayerProvider>
+  //           <section className={s.container}>
+  //             <Player />
+  //             <Controls />
+  //             <ul>
+  //               {moments.map((moment, index) => (
+  //                 <li key={index}>
+  //                   <MomentButton moment={moment} />
+  //                 </li>
+  //               ))}
+  //             </ul>
+  //           </section>
+  //         </PlayerProvider>
+  //       )}
+  //     </MomentContext.Consumer>
+  //   </MomentProvider>
+  // )
 }
