@@ -3,7 +3,7 @@ import { useAuth, useDatabase } from '../contexts/FirebaseProvider'
 import { Track } from '../types/track'
 
 export default function Root() {
-  const auth = useAuth()
+  const { user, login } = useAuth()
   const database = useDatabase()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -13,7 +13,7 @@ export default function Root() {
       <form
         onSubmit={async (event) => {
           event.preventDefault()
-          const user = await auth.login(email, password)
+          const user = await login(email, password)
           console.log(user)
         }}
       >
@@ -34,13 +34,13 @@ export default function Root() {
 
       <hr />
 
-      <pre>{JSON.stringify(auth.user, null, 2)}</pre>
+      <pre>{JSON.stringify(user, null, 2)}</pre>
 
       <hr />
 
       <button
         onClick={() => {
-          if (auth.user) {
+          if (user) {
             const track: Track = {
               youtubeId: 'InFbBlpDTfQ',
               moments: [

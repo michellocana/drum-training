@@ -13,6 +13,8 @@ import {
 } from 'react'
 import { FIREBASE_CONFIG } from '../constants/firebase'
 import { FirebaseContextType, FirebaseUser } from '../types/firebase'
+import { useLocation, Navigate } from 'react-router-dom'
+import { ROUTES, UNLOGGED_ROUTES } from '../constants/routes'
 
 const noop = async () => {}
 
@@ -31,13 +33,17 @@ const FirebaseContext = createContext<FirebaseContextType>({
 initializeApp(FIREBASE_CONFIG)
 
 export default function FirebaseProvider({ children }: PropsWithChildren) {
+  const [isReady, setIsReady] = useState(false)
   const [user, setUser] = useState<FirebaseUser>(null)
   const database = useMemo(() => firebaseDb.getDatabase(), [])
   const auth = useMemo(() => firebaseAuth.getAuth(), [])
+  const location = useLocation()
   const isLogged = user !== null
+  const isLoggedRoute = !UNLOGGED_ROUTES.includes(location.pathname)
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
+      setIsReady(true)
       setUser(user)
     })
 
@@ -63,6 +69,23 @@ export default function FirebaseProvider({ children }: PropsWithChildren) {
     [database],
   )
 
+  const renderContent = useCallback(() => {
+    if (!isReady) {
+      // TODO: proper loader
+      return 'Loading...'
+    }
+
+    if (isLogged && !isLoggedRoute) {
+      return <Navigate to={ROUTES.TRAINING} />
+    }
+
+    if (!isLogged && isLoggedRoute) {
+      return <Navigate to={ROUTES.ROOT} />
+    }
+
+    return children
+  }, [children, isLogged, isLoggedRoute, isReady])
+
   return (
     <FirebaseContext.Provider
       value={{
@@ -77,7 +100,7 @@ export default function FirebaseProvider({ children }: PropsWithChildren) {
         },
       }}
     >
-      {children}
+      {renderContent()}
     </FirebaseContext.Provider>
   )
 }
