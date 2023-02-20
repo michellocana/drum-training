@@ -18,6 +18,12 @@
   gap: 32px;
 }
 
+.text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .title {
   font-size: 32px;
   color: var(--white);
@@ -29,6 +35,8 @@
 }
 
 .subtitle {
+  width: 100%;
+  max-width: 300px;
   font-size: 20px;
   color: var(--blue-300);
   line-height: 1.2;
@@ -60,16 +68,5 @@
   .container {
     gap: 16px;
     max-width: 350px;
-  }
-}
-
-@media screen and (max-width: 359px) {
-  .title strong {
-    display: block;
-  }
-
-  .text {
-    display: grid;
-    gap: 8px;
   }
 }

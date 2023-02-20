@@ -12,7 +12,7 @@ import {
   useState,
 } from 'react'
 import { FIREBASE_CONFIG } from '../constants/firebase'
-import { FirebaseContextType, FirebaseUser } from '../types/firebase'
+import { FirebaseContextType, FirebaseUser, Optin } from '../types/firebase'
 import { useLocation, Navigate } from 'react-router-dom'
 import { ROUTES, UNLOGGED_ROUTES } from '../constants/routes'
 
@@ -21,6 +21,7 @@ const noop = async () => {}
 const FirebaseContext = createContext<FirebaseContextType>({
   auth: {
     user: null,
+    optin: null,
     isLogged: false,
     login: noop,
     logout: noop,
@@ -36,20 +37,13 @@ initializeApp(FIREBASE_CONFIG)
 export default function FirebaseProvider({ children }: PropsWithChildren) {
   const [isReady, setIsReady] = useState(false)
   const [user, setUser] = useState<FirebaseUser>(null)
+  const [optin, setOptin] = useState<Optin>(null)
   const database = useMemo(() => firebaseDb.getDatabase(), [])
   const auth = useMemo(() => firebaseAuth.getAuth(), [])
   const location = useLocation()
   const isLogged = user !== null
   const isLoggedRoute = !UNLOGGED_ROUTES.includes(location.pathname)
-
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      setIsReady(true)
-      setUser(user)
-    })
-
-    return () => unsubscribe()
-  }, [auth])
+  const hasOptin = !!optin
 
   const login = useCallback(
     async (email: string, password: string) => {
@@ -62,6 +56,19 @@ export default function FirebaseProvider({ children }: PropsWithChildren) {
   const logout = useCallback(async () => {
     await firebaseAuth.signOut(auth)
   }, [auth])
+
+  const readFromDatabase = useCallback(
+    async (path: string) => {
+      const snapshot = await firebaseDb.get(firebaseDb.ref(database, path))
+
+      if (snapshot.exists()) {
+        return snapshot.val()
+      }
+
+      return null
+    },
+    [database],
+  )
 
   const writeOnDatabase = useCallback(
     async (path: string, value: unknown) => {
@@ -76,7 +83,13 @@ export default function FirebaseProvider({ children }: PropsWithChildren) {
       return 'Loading...'
     }
 
-    if (isLogged && !isLoggedRoute) {
+    console.log({ isLogged, isLoggedRoute, hasOptin })
+
+    // isLogged true
+    // isLoggedRoute false
+    // hasOptin false
+
+    if (isLogged && !isLoggedRoute && hasOptin) {
       return <Navigate to={ROUTES.TRAINING} />
     }
 
@@ -85,7 +98,34 @@ export default function FirebaseProvider({ children }: PropsWithChildren) {
     }
 
     return children
-  }, [children, isLogged, isLoggedRoute, isReady])
+  }, [children, hasOptin, isLogged, isLoggedRoute, isReady])
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        const optinData = await readFromDatabase(`users/${user.uid}/optin`)
+        setOptin(optinData)
+      }
+
+      setIsReady(true)
+      setUser(user)
+    })
+
+    return () => unsubscribe()
+  }, [auth, readFromDatabase])
+
+  useEffect(() => {
+    if (!user) {
+      return
+    }
+
+    const optinRef = firebaseDb.ref(database, `users/${user.uid}/optin`)
+    const unsubscribe = firebaseDb.onValue(optinRef, (snapshot) => {
+      setOptin(snapshot.val())
+    })
+
+    return () => unsubscribe()
+  }, [database, user])
 
   return (
     <FirebaseContext.Provider
@@ -95,9 +135,10 @@ export default function FirebaseProvider({ children }: PropsWithChildren) {
           logout,
           isLogged,
           user,
+          optin,
         },
         database: {
-          read: noop,
+          read: readFromDatabase,
           write: writeOnDatabase,
         },
       }}

@@ -38,6 +38,9 @@
 
   /* Transitions */
   --transition: all 0.2s ease-in-out;
+
+  /* Fonts */
+  --open-sans: 'Open Sans', sans-serif;
 }
 
 /* Reset */
@@ -51,10 +54,10 @@ html,
 body {
   margin: 0;
   padding: 0;
+  font-family: var(--open-sans);
 }
 
 body {
-  font-family: 'Open Sans', sans-serif;
   background: var(--grey-750);
 }
 
