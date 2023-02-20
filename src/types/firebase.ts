@@ -7,6 +7,7 @@ export type FirebaseContextType = {
     user: FirebaseUser
     isLogged: boolean
     login(email: string, password: string): Promise<User | void>
+    logout(): Promise<void>
   }
   database: {
     read(): Promise<void>

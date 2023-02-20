@@ -23,6 +23,7 @@ const FirebaseContext = createContext<FirebaseContextType>({
     user: null,
     isLogged: false,
     login: noop,
+    logout: noop,
   },
   database: {
     read: noop,
@@ -62,6 +63,10 @@ export default function FirebaseProvider({ children }: PropsWithChildren) {
     [auth],
   )
 
+  const logout = useCallback(async () => {
+    await firebaseAuth.signOut(auth)
+  }, [auth])
+
   const writeOnDatabase = useCallback(
     async (path: string, value: unknown) => {
       await firebaseDb.set(firebaseDb.ref(database, path), value)
@@ -91,6 +96,7 @@ export default function FirebaseProvider({ children }: PropsWithChildren) {
       value={{
         auth: {
           login,
+          logout,
           isLogged,
           user,
         },
