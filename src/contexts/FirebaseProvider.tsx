@@ -53,12 +53,8 @@ export default function FirebaseProvider({ children }: PropsWithChildren) {
 
   const login = useCallback(
     async (email: string, password: string) => {
-      try {
-        const { user } = await firebaseAuth.signInWithEmailAndPassword(auth, email, password)
-        return user
-      } catch (error) {
-        console.log(error)
-      }
+      const { user } = await firebaseAuth.signInWithEmailAndPassword(auth, email, password)
+      return user
     },
     [auth],
   )

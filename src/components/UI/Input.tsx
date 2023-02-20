@@ -1,11 +1,10 @@
 import { ErrorMessage, useField } from 'formik'
 import cn from 'classnames'
 
-import errorIcon from '../../assets/icons/error.svg'
-
 import s from './Input.module.css'
+import Error from './Error'
 
-type InputProps = JSX.IntrinsicElements['input'] & {
+type InputProps = React.HTMLProps<HTMLInputElement> & {
   name: string
   type?: string
 }
@@ -24,16 +23,7 @@ export default function Input({ name, type = 'text', ...otherProps }: InputProps
           className={cn(s.field, { [s.fieldHasError]: hasError })}
         />
       </div>
-      {hasError && (
-        <ErrorMessage name={name}>
-          {(error) => (
-            <div className={s.error}>
-              <img src={errorIcon} alt='' />
-              {error}
-            </div>
-          )}
-        </ErrorMessage>
-      )}
+      {hasError && <ErrorMessage name={name}>{(error) => <Error>{error}</Error>}</ErrorMessage>}
     </div>
   )
 }

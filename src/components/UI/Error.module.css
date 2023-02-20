@@ -1,0 +1,10 @@
+.error {
+  display: grid;
+  grid-template-columns: 16px 1fr;
+  gap: 8px;
+  text-align: left;
+  font-size: 12px;
+  line-height: 1.2;
+  color: var(--red-500);
+  align-items: center;
+}

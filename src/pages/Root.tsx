@@ -4,6 +4,10 @@ import * as Yup from 'yup'
 
 import s from './Root.module.css'
 import Input from '../components/UI/Input'
+import Button from '../components/UI/Button'
+import { FirebaseError } from 'firebase/app'
+import { FIREBASE_AUTH_ERRORS } from '../constants/firebase'
+import Error from '../components/UI/Error'
 
 const LoginSchema = Yup.object().shape({
   email: Yup.string().email('Invalid e-mail').required('Required field'),
@@ -17,11 +21,17 @@ export default function Root() {
     <Formik
       initialValues={{ email: '', password: '' }}
       validationSchema={LoginSchema}
-      onSubmit={({ email, password }) => login(email, password)}
-      initialErrors={{ email: 'Required field' }}
-      initialTouched={{ email: true }}
+      onSubmit={async ({ email, password }, { setStatus }) => {
+        try {
+          await login(email, password)
+        } catch (error) {
+          if (error instanceof FirebaseError) {
+            setStatus(FIREBASE_AUTH_ERRORS[error.code])
+          }
+        }
+      }}
     >
-      {() => (
+      {({ isSubmitting, status }) => (
         <section className={s.wrapper}>
           <div className={s.container}>
             <div className={s.text}>
@@ -33,7 +43,12 @@ export default function Root() {
             <Form noValidate className={s.form}>
               <Input name='email' type='email' placeholder='E-mail' />
               <Input name='password' type='password' placeholder='Password' />
-              <button type='submit'>login</button>
+              {status && <Error>{status}</Error>}
+              <div className={s.submitWrapper}>
+                <Button type='submit' isLoading={isSubmitting}>
+                  Sign in
+                </Button>
+              </div>
             </Form>
           </div>
         </section>
