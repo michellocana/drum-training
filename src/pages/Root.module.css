@@ -47,3 +47,29 @@
   display: flex;
   justify-content: center;
 }
+
+@media screen and (max-width: 768px) {
+  .title {
+    font-size: 20px;
+  }
+
+  .subtitle {
+    font-size: 16px;
+  }
+
+  .container {
+    gap: 16px;
+    max-width: 350px;
+  }
+}
+
+@media screen and (max-width: 359px) {
+  .title strong {
+    display: block;
+  }
+
+  .text {
+    display: grid;
+    gap: 8px;
+  }
+}
