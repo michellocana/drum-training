@@ -13,8 +13,7 @@ export default function Root() {
       <form
         onSubmit={async (event) => {
           event.preventDefault()
-          const user = await login(email, password)
-          console.log(user)
+          await login(email, password)
         }}
       >
         <input
@@ -31,10 +30,6 @@ export default function Root() {
         />
         <button type='submit'>login</button>
       </form>
-
-      <hr />
-
-      <pre>{JSON.stringify(user, null, 2)}</pre>
 
       <hr />
 
