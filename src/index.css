@@ -23,7 +23,7 @@
   --grey-500: #7d8998;
   --grey-450: #8d99a8;
   --grey-400: #9ba7b6;
-  --grey-300: #d1b5db;
+  --grey-300: #d1d5db;
   --grey-200: #e9ebed;
   --grey-150: #f4f4f4;
   --grey-100: #fbfbfb;
@@ -35,8 +35,12 @@
 
   /* Other colors */
   --white: #fff;
+
+  /* Transitions */
+  --transition: all 0.2s ease-in-out;
 }
 
+/* Reset */
 *,
 *::before,
 *::after {
@@ -61,4 +65,13 @@ body,
 
 #root {
   display: flex;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
 }
