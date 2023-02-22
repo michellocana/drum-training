@@ -1,6 +1,9 @@
 import { Moment } from './moment'
 
 export type Track = {
-  youtubeId: string
+  name: string
+  artist: string
+  videoUrl: string
+  userId: string
   moments: Moment[]
 }

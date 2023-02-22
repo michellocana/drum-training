@@ -1,8 +1,8 @@
 import { User } from 'firebase/auth'
 
 export type FirebaseUser = User | null
-export type Optin = { firstName: string } | null
-export type FullUser = User & Partial<Optin>
+export type ExtraData = { type: 'firstName'; value: string }
+export type FullUser = User & Partial<ExtraData>
 
 export type FirebaseContextType = {
   auth: {
@@ -12,8 +12,9 @@ export type FirebaseContextType = {
     login(email: string, password: string): Promise<User | void>
     logout(): Promise<void>
   }
-  database: {
-    read(path: string): Promise<void>
-    write(path: string, value: unknown): Promise<void>
-  }
+}
+
+export type UserTrack = {
+  trackId: string
+  loops: number
 }

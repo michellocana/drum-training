@@ -106,8 +106,6 @@ export default function PlayerProvider({ children }: PropsWithChildren) {
           })
         }, 1000)
       }, timeToNextSecond)
-
-      console.log()
     }
 
     function unsubscribe() {

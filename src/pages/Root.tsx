@@ -1,5 +1,5 @@
 import { Formik, Form } from 'formik'
-import { useAuth, useDatabase } from '../contexts/FirebaseProvider'
+import { app, useAuth } from '../contexts/FirebaseProvider'
 import * as Yup from 'yup'
 
 import s from './Root.module.css'
@@ -8,6 +8,9 @@ import Button from '../components/UI/Button'
 import { FirebaseError } from 'firebase/app'
 import { FIREBASE_AUTH_ERRORS } from '../constants/firebase'
 import Error from '../components/UI/Error'
+import { ExtraData } from '../types/user'
+import { addDoc, collection, getFirestore } from 'firebase/firestore'
+import { DatabaseEntities } from '../types/database'
 
 const LoginSchema = Yup.object().shape({
   email: Yup.string().email('Invalid e-mail').required('Required field'),
@@ -20,7 +23,6 @@ const OptinSchema = Yup.object().shape({
 
 export default function Root() {
   const auth = useAuth()
-  const database = useDatabase()
   const isOptinNeeded = auth.isLogged && !auth.hasOptin
 
   if (!isOptinNeeded) {
@@ -72,9 +74,15 @@ export default function Root() {
     <Formik
       initialValues={{ firstName: '' }}
       validationSchema={OptinSchema}
-      onSubmit={({ firstName }, { setStatus }) =>
-        database.write(`users/${auth.user?.uid}/optin/firstName`, firstName)
-      }
+      onSubmit={({ firstName }, { setStatus }) => {
+        const db = getFirestore(app)
+        const data: ExtraData = { type: 'firstName', value: firstName }
+
+        return addDoc(
+          collection(db, DatabaseEntities.Users, auth.user?.uid ?? '', DatabaseEntities.ExtraData),
+          data,
+        )
+      }}
     >
       {({ isSubmitting }) => (
         <section className={s.wrapper}>
