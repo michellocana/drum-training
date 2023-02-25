@@ -1,5 +1,5 @@
 import { Formik, Form } from 'formik'
-import { app, useAuth } from '../contexts/FirebaseProvider'
+import { app, useAuth } from '../contexts/AuthProvider'
 import * as Yup from 'yup'
 
 import s from './Root.module.css'
@@ -8,7 +8,7 @@ import Button from '../components/UI/Button'
 import { FirebaseError } from 'firebase/app'
 import { FIREBASE_AUTH_ERRORS } from '../constants/firebase'
 import Error from '../components/UI/Error'
-import { ExtraDataValues } from '../types/user'
+import { ExtraDataValues } from '../types/auth'
 import { addDoc, collection, getFirestore } from 'firebase/firestore'
 import { DatabaseEntities } from '../types/database'
 

@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { Md5 } from 'ts-md5'
-import { useAuth } from '../../contexts/FirebaseProvider'
+import { useAuth } from '../../contexts/AuthProvider'
 
 export default function ProfilePicture() {
   const { user } = useAuth()

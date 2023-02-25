@@ -19,26 +19,24 @@ import {
   useState,
 } from 'react'
 import { FIREBASE_CONFIG } from '../constants/firebase'
-import { FirebaseContextType, FullUser, ExtraData, ExtraDataValues } from '../types/user'
+import { AuthContextType, FullUser, ExtraData, ExtraDataValues } from '../types/auth'
 import { useLocation, Navigate } from 'react-router-dom'
 import { ROUTES, UNLOGGED_ROUTES } from '../constants/routes'
 import { DatabaseEntities } from '../types/database'
 
 const noop = async () => {}
 
-const FirebaseContext = createContext<FirebaseContextType>({
-  auth: {
-    user: null,
-    hasOptin: false,
-    isLogged: false,
-    login: noop,
-    logout: noop,
-  },
+const AuthContext = createContext<AuthContextType>({
+  user: null,
+  hasOptin: false,
+  isLogged: false,
+  login: noop,
+  logout: noop,
 })
 
 export const app = initializeApp(FIREBASE_CONFIG)
 
-export default function FirebaseProvider({ children }: PropsWithChildren) {
+export default function AuthProvider({ children }: PropsWithChildren) {
   const [isReady, setIsReady] = useState(false)
   const [user, setUser] = useState<FullUser | null>(null)
   const [optin, setOptin] = useState<ExtraDataValues | null>(null)
@@ -144,24 +142,22 @@ export default function FirebaseProvider({ children }: PropsWithChildren) {
   }, [db, optin, user])
 
   return (
-    <FirebaseContext.Provider
+    <AuthContext.Provider
       value={{
-        auth: {
-          login,
-          logout,
-          isLogged,
-          user,
-          hasOptin,
-        },
+        login,
+        logout,
+        isLogged,
+        user,
+        hasOptin,
       }}
     >
       {renderContent()}
-    </FirebaseContext.Provider>
+    </AuthContext.Provider>
   )
 }
 
 export function useAuth() {
-  return useContext(FirebaseContext).auth
+  return useContext(AuthContext)
 }
 
 // TODO use this in training page

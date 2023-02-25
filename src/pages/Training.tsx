@@ -3,11 +3,11 @@ import { Form, Formik } from 'formik'
 import Button from '../components/UI/Button'
 import Input from '../components/UI/Input'
 import ProfilePicture from '../components/User/ProfilePicture'
-import { app, useAuth } from '../contexts/FirebaseProvider'
+import { app, useAuth } from '../contexts/AuthProvider'
 import { Moment } from '../types/moment'
 import { Track } from '../types/track'
 import { DatabaseEntities } from '../types/database'
-import { UserTrack } from '../types/user'
+import { UserTrack } from '../types/auth'
 
 export default function Training() {
   const { user } = useAuth()
