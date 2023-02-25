@@ -1,6 +1,13 @@
 import { initializeApp } from 'firebase/app'
 import { getAuth, signInWithEmailAndPassword, signOut } from 'firebase/auth'
-import { collection, getDocs, getFirestore, onSnapshot } from 'firebase/firestore'
+import {
+  collection,
+  CollectionReference,
+  getDocs,
+  getFirestore,
+  onSnapshot,
+  QuerySnapshot,
+} from 'firebase/firestore'
 
 import {
   createContext,
@@ -12,7 +19,7 @@ import {
   useState,
 } from 'react'
 import { FIREBASE_CONFIG } from '../constants/firebase'
-import { FirebaseContextType, FullUser, ExtraData } from '../types/user'
+import { FirebaseContextType, FullUser, ExtraData, ExtraDataValues } from '../types/user'
 import { useLocation, Navigate } from 'react-router-dom'
 import { ROUTES, UNLOGGED_ROUTES } from '../constants/routes'
 import { DatabaseEntities } from '../types/database'
@@ -34,13 +41,16 @@ export const app = initializeApp(FIREBASE_CONFIG)
 export default function FirebaseProvider({ children }: PropsWithChildren) {
   const [isReady, setIsReady] = useState(false)
   const [user, setUser] = useState<FullUser | null>(null)
-  const [optin, setOptin] = useState<ExtraData[] | null>(null)
+  const [optin, setOptin] = useState<ExtraDataValues | null>(null)
   const db = useMemo(() => getFirestore(app), [])
   const auth = useMemo(() => getAuth(app), [])
   const location = useLocation()
   const isLogged = user !== null
   const isLoggedRoute = !UNLOGGED_ROUTES.includes(location.pathname)
-  const hasOptin = !!optin?.length
+  const hasOptin = !!optin
+
+  const findExtraDataValue = (key: keyof ExtraDataValues, data: ExtraData[]) =>
+    data.find((extraData) => extraData.type === key)?.value ?? ''
 
   const login = useCallback(
     async (email: string, password: string) => {
@@ -78,19 +88,18 @@ export default function FirebaseProvider({ children }: PropsWithChildren) {
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
       if (user) {
-        const extraData = await getDocs(
+        const extraData = (await getDocs(
           collection(db, DatabaseEntities.Users, user.uid, DatabaseEntities.ExtraData),
-        )
+        )) as QuerySnapshot<ExtraData>
 
         if (!extraData.empty) {
-          const optinData = extraData.docs.map((result) => {
-            const data = result.data()
+          const extraDataDocs = extraData.docs.map((value) => value.data())
 
-            return {
-              type: data.type,
-              value: data.value,
-            }
-          })
+          const optinData: ExtraDataValues = {
+            firstName: findExtraDataValue('firstName', extraDataDocs),
+            userName: findExtraDataValue('userName', extraDataDocs),
+          }
+
           setIsReady(true)
           setOptin(optinData)
           setUser({ ...user, ...optinData })
@@ -98,8 +107,8 @@ export default function FirebaseProvider({ children }: PropsWithChildren) {
         }
       }
 
-      setIsReady(true)
       setUser(user)
+      setIsReady(true)
     })
 
     return () => unsubscribe()
@@ -110,18 +119,22 @@ export default function FirebaseProvider({ children }: PropsWithChildren) {
       return
     }
 
-    const optinRef = collection(db, DatabaseEntities.Users, user.uid, DatabaseEntities.ExtraData)
+    const optinRef = collection(
+      db,
+      DatabaseEntities.Users,
+      user.uid,
+      DatabaseEntities.ExtraData,
+    ) as CollectionReference<ExtraData>
 
-    const unsubscribe = onSnapshot(optinRef, (snapshot) => {
+    const unsubscribe = onSnapshot<ExtraData>(optinRef, (snapshot) => {
       if (!optin && !snapshot.empty) {
-        const optinData = snapshot.docs.map((result) => {
-          const data = result.data()
+        const extraDataDocs = snapshot.docs.map((doc) => doc.data())
 
-          return {
-            type: data.type,
-            value: data.value,
-          }
-        })
+        const optinData: ExtraDataValues = {
+          firstName: findExtraDataValue('firstName', extraDataDocs),
+          userName: findExtraDataValue('userName', extraDataDocs),
+        }
+
         setOptin(optinData)
         setUser({ ...user, ...optinData })
       }

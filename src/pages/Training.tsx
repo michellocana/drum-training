@@ -16,7 +16,8 @@ export default function Training() {
     <div style={{ padding: 40 }}>
       <h1>Infos</h1>
       <ul style={{ color: 'white' }}>
-        <li>{user?.type}</li>
+        <li>Username: {user?.userName}</li>
+        <li>Firstname: {user?.firstName}</li>
         <li>
           <ProfilePicture />
         </li>

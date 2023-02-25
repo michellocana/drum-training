@@ -8,7 +8,7 @@ import Button from '../components/UI/Button'
 import { FirebaseError } from 'firebase/app'
 import { FIREBASE_AUTH_ERRORS } from '../constants/firebase'
 import Error from '../components/UI/Error'
-import { ExtraData } from '../types/user'
+import { ExtraDataValues } from '../types/user'
 import { addDoc, collection, getFirestore } from 'firebase/firestore'
 import { DatabaseEntities } from '../types/database'
 
@@ -18,6 +18,9 @@ const LoginSchema = Yup.object().shape({
 })
 
 const OptinSchema = Yup.object().shape({
+  userName: Yup.string()
+    .required('Required field')
+    .test({ test: (value) => !value.includes(' '), message: 'No spaces allowed' }),
   firstName: Yup.string().required('Required field'),
 })
 
@@ -32,11 +35,7 @@ export default function Root() {
         validationSchema={LoginSchema}
         onSubmit={async ({ email, password }, { setStatus }) => {
           try {
-            const user = await auth.login(email, password)
-
-            if (!user) {
-              return
-            }
+            await auth.login(email, password)
           } catch (error) {
             if (error instanceof FirebaseError) {
               setStatus(FIREBASE_AUTH_ERRORS[error.code])
@@ -71,17 +70,28 @@ export default function Root() {
   }
 
   return (
-    <Formik
-      initialValues={{ firstName: '' }}
+    <Formik<ExtraDataValues>
+      initialValues={{ userName: '', firstName: '' }}
       validationSchema={OptinSchema}
-      onSubmit={({ firstName }, { setStatus }) => {
+      onSubmit={({ userName, firstName }, { setStatus }) => {
         const db = getFirestore(app)
-        const data: ExtraData = { type: 'firstName', value: firstName }
+        const [path, ...pathSegments] = [
+          DatabaseEntities.Users,
+          auth.user?.uid ?? '',
+          DatabaseEntities.ExtraData,
+        ]
 
-        return addDoc(
-          collection(db, DatabaseEntities.Users, auth.user?.uid ?? '', DatabaseEntities.ExtraData),
-          data,
-        )
+        return Promise.all([
+          addDoc(collection(db, path, ...pathSegments), {
+            type: 'userName',
+            value: userName,
+          }),
+
+          addDoc(collection(db, path, ...pathSegments), {
+            type: 'firstName',
+            value: firstName,
+          }),
+        ])
       }}
     >
       {({ isSubmitting }) => (
@@ -94,6 +104,7 @@ export default function Root() {
               <h2 className={s.subtitle}>We need just a little more info before you continue.</h2>
             </div>
             <Form noValidate className={s.form}>
+              <Input name='userName' placeholder='User name' />
               <Input name='firstName' placeholder='First name' />
               <div className={s.submitWrapper}>
                 <Button type='submit' isLoading={isSubmitting}>
