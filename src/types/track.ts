@@ -1,15 +1,14 @@
-import { Moment } from './moment'
-
 export type TracksContextType = {
-  fetchTracks(): Promise<void>
   tracks: Track[]
   isLoading: boolean
 }
 
 export type Track = {
+  id: string
   name: string
   artist: string
   videoUrl: string
   userId: string
-  moments: Moment[]
 }
+
+export type NewTrack = Omit<Track, 'id'>

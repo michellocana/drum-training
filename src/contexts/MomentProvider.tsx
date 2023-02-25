@@ -10,12 +10,14 @@ export default function MomentProvider({ children }: PropsWithChildren) {
   // TODO make this dynamic
   const [moments] = useState<Moment[]>([
     {
+      id: '',
       name: 'Moment 1',
       start: 98,
       end: 108,
       trackId: '',
     },
     {
+      id: '',
       name: 'Moment 1 extended',
       start: 88,
       end: 118,

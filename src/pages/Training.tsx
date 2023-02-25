@@ -4,13 +4,39 @@ import Button from '../components/UI/Button'
 import Input from '../components/UI/Input'
 import ProfilePicture from '../components/User/ProfilePicture'
 import { app, useAuth } from '../contexts/AuthProvider'
-import { Moment } from '../types/moment'
-import { Track } from '../types/track'
+import { Moment, NewMoment } from '../types/moment'
+import { NewTrack } from '../types/track'
 import { DatabaseEntities } from '../types/database'
 import { UserTrack } from '../types/auth'
+import { useTracks } from '../contexts/TracksProvider'
+import { useMoments } from '../hooks/useMoments'
+import { useDurationLabel } from '../hooks/useDurationLabel'
+
+function MomentInfo({ moment }: { moment: Moment }) {
+  const momentStartLabel = useDurationLabel(moment.start)
+  const momentEndLabel = useDurationLabel(moment.end)
+
+  return <li key={moment.id}>{moment.name + ' / ' + momentStartLabel + ' / ' + momentEndLabel}</li>
+}
+
+function Moments({ trackId }: { trackId: string }) {
+  const { isLoading, moments } = useMoments(trackId)
+
+  return (
+    <>
+      Moments {isLoading && '(loading...)'}
+      <ul>
+        {moments.map((moment) => (
+          <MomentInfo key={moment.id} moment={moment} />
+        ))}
+      </ul>
+    </>
+  )
+}
 
 export default function Training() {
   const { user } = useAuth()
+  const { isLoading: isLoadingTracks, tracks } = useTracks()
 
   return (
     <div style={{ padding: 40 }}>
@@ -22,23 +48,20 @@ export default function Training() {
           <ProfilePicture />
         </li>
         <li>
-          Tracks (TODO)
+          Tracks {isLoadingTracks && '(loading...)'}
           <ul>
-            <li>
-              Track 1
-              <ul>
-                <li>Name</li>
-                <li>Artist</li>
-                <li>URL</li>
-                <li>
-                  Moments
-                  <ul>
-                    <li>Moment 1</li>
-                    <li>Moment 2</li>
-                  </ul>
-                </li>
-              </ul>
-            </li>
+            {tracks.map((track, index) => (
+              <li key={track.id}>
+                {track.name}
+                <ul>
+                  <li>{track.artist}</li>
+                  <li>{track.videoUrl}</li>
+                  <li>
+                    <Moments trackId={track.id} />
+                  </li>
+                </ul>
+              </li>
+            ))}
           </ul>
         </li>
       </ul>
@@ -55,19 +78,16 @@ export default function Training() {
           const db = getFirestore(app)
 
           // Add track
-          const track: Track = { ...values, userId: userId, moments: [] }
+          const track: NewTrack = { ...values, userId: userId }
           const trackRef = await addDoc(collection(db, DatabaseEntities.Tracks), track)
           const trackId = trackRef?.id ?? ''
 
           // Add moment to track
-          const moment: Moment = { name: 'Moment 1', start: 0, end: 10, trackId }
-          await addDoc(
-            collection(db, DatabaseEntities.Tracks, trackId, DatabaseEntities.Moments),
-            moment,
-          )
+          const moment: NewMoment = { name: 'Moment 1', start: 0, end: 10, trackId }
+          await addDoc(collection(db, DatabaseEntities.Moments), moment)
 
           // Link track to user
-          const userTrack: UserTrack = { loops: 0, trackId: trackId }
+          const userTrack: UserTrack = { loops: 0, id: trackId }
           await addDoc(
             collection(db, DatabaseEntities.Users, userId, DatabaseEntities.Tracks),
             userTrack,
