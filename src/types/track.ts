@@ -1,4 +1,5 @@
 export type TracksContextType = {
+  addTrack(track: NewTrack): Promise<void>
   tracks: Track[]
   isLoading: boolean
 }

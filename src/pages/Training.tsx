@@ -1,20 +1,16 @@
-import { addDoc, collection, getFirestore } from 'firebase/firestore'
 import { Form, Formik } from 'formik'
 import Button from '../components/UI/Button'
 import Input from '../components/UI/Input'
 import ProfilePicture from '../components/User/ProfilePicture'
-import { app, useAuth } from '../contexts/AuthProvider'
-import { Moment, NewMoment } from '../types/moment'
-import { NewTrack } from '../types/track'
-import { DatabaseEntities } from '../types/database'
-import { UserTrack } from '../types/auth'
+import { useAuth } from '../contexts/AuthProvider'
+import { Moment } from '../types/moment'
 import { useTracks } from '../contexts/TracksProvider'
 import useMoments from '../hooks/useMoments'
 import useDurationLabel from '../hooks/useDurationLabel'
 
 export default function Training() {
   const { user, logout } = useAuth()
-  const { isLoading: isLoadingTracks, tracks } = useTracks()
+  const { isLoading: isLoadingTracks, tracks, addTrack } = useTracks()
 
   return (
     <div style={{ padding: 40 }}>
@@ -54,25 +50,8 @@ export default function Training() {
           videoUrl: 'https://www.youtube.com/watch?v=InFbBlpDTfQ',
         }}
         onSubmit={async (values) => {
-          // TODO move this to TracksProvider
           const userId = user?.uid ?? ''
-          const db = getFirestore(app)
-
-          // Add track
-          const track: NewTrack = { ...values, userId: userId }
-          const trackRef = await addDoc(collection(db, DatabaseEntities.Tracks), track)
-          const trackId = trackRef?.id ?? ''
-
-          // Add moment to track
-          const moment: NewMoment = { name: 'Moment 1', start: 0, end: 10, trackId }
-          await addDoc(collection(db, DatabaseEntities.Moments), moment)
-
-          // Link track to user
-          const userTrack: UserTrack = { loops: 0, id: trackId }
-          await addDoc(
-            collection(db, DatabaseEntities.Users, userId, DatabaseEntities.Tracks),
-            userTrack,
-          )
+          await addTrack({ ...values, userId: userId })
         }}
       >
         {({ isSubmitting }) => (

@@ -1,4 +1,5 @@
 import {
+  addDoc,
   collection,
   CollectionReference,
   getFirestore,
@@ -6,13 +7,24 @@ import {
   query,
   where,
 } from 'firebase/firestore'
-import { createContext, PropsWithChildren, useContext, useEffect, useMemo, useState } from 'react'
+import {
+  createContext,
+  PropsWithChildren,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react'
 import useUserTracks from '../hooks/useUserTracks'
+import { UserTrack } from '../types/auth'
 import { DatabaseEntities } from '../types/database'
-import { Track, TracksContextType } from '../types/track'
+import { NewMoment } from '../types/moment'
+import { NewTrack, Track, TracksContextType } from '../types/track'
 import { app, useAuth } from './AuthProvider'
 
 const TracksContext = createContext<TracksContextType>({
+  addTrack: async () => {},
   isLoading: false,
   tracks: [],
 })
@@ -24,6 +36,26 @@ export default function TracksProvider({ children }: PropsWithChildren) {
   const [isInitialFetch, setIsInitialFetch] = useState(true)
   const [isLoading, setIsLoading] = useState(false)
   const userTracks = useUserTracks()
+
+  const addTrack = useCallback(
+    async (track: NewTrack) => {
+      // Add track
+      const trackRef = await addDoc(collection(db, DatabaseEntities.Tracks), track)
+      const trackId = trackRef?.id ?? ''
+
+      // Add moment to track
+      const moment: NewMoment = { name: 'Moment 1', start: 0, end: 10, trackId }
+      await addDoc(collection(db, DatabaseEntities.Moments), moment)
+
+      // Link track to user
+      const userTrack: UserTrack = { loops: 0, id: trackId }
+      await addDoc(
+        collection(db, DatabaseEntities.Users, track.userId, DatabaseEntities.Tracks),
+        userTrack,
+      )
+    },
+    [db],
+  )
 
   useEffect(() => {
     if (isLogged) {
@@ -57,6 +89,7 @@ export default function TracksProvider({ children }: PropsWithChildren) {
   return (
     <TracksContext.Provider
       value={{
+        addTrack,
         isLoading,
         tracks,
       }}
