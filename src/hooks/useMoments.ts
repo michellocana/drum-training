@@ -11,17 +11,16 @@ import { app } from '../contexts/AuthProvider'
 import { DatabaseEntities } from '../types/database'
 import { Moment } from '../types/moment'
 
-export function useMoments(trackId: string) {
+export default function useMoments(trackId: string) {
   const [moments, setMoments] = useState<Moment[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const db = useMemo(() => getFirestore(app), [])
 
   useEffect(() => {
-    async function fetchMoments() {
+    if (!isLoading) {
       const momentsRef = collection(db, DatabaseEntities.Moments) as CollectionReference<Moment>
       const momentsQuery = query(momentsRef, where('trackId', '==', trackId))
-
-      onSnapshot(momentsQuery, (snapshot) => {
+      const unsubscribe = onSnapshot(momentsQuery, (snapshot) => {
         setIsLoading(true)
 
         setMoments(
@@ -33,10 +32,8 @@ export function useMoments(trackId: string) {
 
         setIsLoading(false)
       })
-    }
 
-    if (!isLoading) {
-      fetchMoments()
+      return () => unsubscribe()
     }
   }, [db, isLoading, trackId])
 

@@ -1,4 +1,4 @@
-import { useDurationLabel } from '../hooks/useDurationLabel'
+import useDurationLabel from '../hooks/useDurationLabel'
 import usePlayer from '../hooks/usePlayer'
 import { PLAYBACK_RATES } from '../types/player'
 

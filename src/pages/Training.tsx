@@ -9,38 +9,18 @@ import { NewTrack } from '../types/track'
 import { DatabaseEntities } from '../types/database'
 import { UserTrack } from '../types/auth'
 import { useTracks } from '../contexts/TracksProvider'
-import { useMoments } from '../hooks/useMoments'
-import { useDurationLabel } from '../hooks/useDurationLabel'
-
-function MomentInfo({ moment }: { moment: Moment }) {
-  const momentStartLabel = useDurationLabel(moment.start)
-  const momentEndLabel = useDurationLabel(moment.end)
-
-  return <li key={moment.id}>{moment.name + ' / ' + momentStartLabel + ' / ' + momentEndLabel}</li>
-}
-
-function Moments({ trackId }: { trackId: string }) {
-  const { isLoading, moments } = useMoments(trackId)
-
-  return (
-    <>
-      Moments {isLoading && '(loading...)'}
-      <ul>
-        {moments.map((moment) => (
-          <MomentInfo key={moment.id} moment={moment} />
-        ))}
-      </ul>
-    </>
-  )
-}
+import useMoments from '../hooks/useMoments'
+import useDurationLabel from '../hooks/useDurationLabel'
 
 export default function Training() {
-  const { user } = useAuth()
+  const { user, logout } = useAuth()
   const { isLoading: isLoadingTracks, tracks } = useTracks()
 
   return (
     <div style={{ padding: 40 }}>
-      <h1>Infos</h1>
+      <h1 style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+        Infos <Button onClick={() => logout()}>logout</Button>
+      </h1>
       <ul style={{ color: 'white' }}>
         <li>Username: {user?.userName}</li>
         <li>Firstname: {user?.firstName}</li>
@@ -66,7 +46,7 @@ export default function Training() {
         </li>
       </ul>
       <hr />
-      <h2>Track Form</h2>
+      <h2>New Track Form</h2>
       <Formik
         initialValues={{
           name: 'Midnight in a perfect world',
@@ -74,7 +54,8 @@ export default function Training() {
           videoUrl: 'https://www.youtube.com/watch?v=InFbBlpDTfQ',
         }}
         onSubmit={async (values) => {
-          const userId = user!.uid
+          // TODO move this to TracksProvider
+          const userId = user?.uid ?? ''
           const db = getFirestore(app)
 
           // Add track
@@ -108,26 +89,27 @@ export default function Training() {
     </div>
   )
 
-  // return (
-  //   <MomentProvider>
-  //     <button onClick={logout}>logout</button>
-  //     <MomentContext.Consumer>
-  //       {({ moments }) => (
-  //         <PlayerProvider>
-  //           <section className={s.container}>
-  //             <Player />
-  //             <Controls />
-  //             <ul>
-  //               {moments.map((moment, index) => (
-  //                 <li key={index}>
-  //                   <MomentButton moment={moment} />
-  //                 </li>
-  //               ))}
-  //             </ul>
-  //           </section>
-  //         </PlayerProvider>
-  //       )}
-  //     </MomentContext.Consumer>
-  //   </MomentProvider>
-  // )
+  function MomentInfo({ moment }: { moment: Moment }) {
+    const momentStartLabel = useDurationLabel(moment.start)
+    const momentEndLabel = useDurationLabel(moment.end)
+
+    return (
+      <li key={moment.id}>{moment.name + ' / ' + momentStartLabel + ' / ' + momentEndLabel}</li>
+    )
+  }
+
+  function Moments({ trackId }: { trackId: string }) {
+    const { isLoading, moments } = useMoments(trackId)
+
+    return (
+      <>
+        Moments {isLoading && '(loading...)'}
+        <ul>
+          {moments.map((moment) => (
+            <MomentInfo key={moment.id} moment={moment} />
+          ))}
+        </ul>
+      </>
+    )
+  }
 }
