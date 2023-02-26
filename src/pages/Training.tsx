@@ -6,7 +6,9 @@ import ProfilePicture from '../components/User/ProfilePicture'
 import { useAuth } from '../contexts/AuthProvider'
 import { useTracks } from '../contexts/TracksProvider'
 import useMoments from '../hooks/useMoments'
+import useTrackThumbnail from '../hooks/useTrackThumbnail'
 import { Moment, MomentData } from '../types/moment'
+import { Track } from '../types/track'
 
 export default function Training() {
   const { user, logout } = useAuth()
@@ -32,6 +34,9 @@ export default function Training() {
                 <ul>
                   <li>{track.artist}</li>
                   <li>{track.videoUrl}</li>
+                  <li>
+                    <TrackThumbnail track={track} />
+                  </li>
                   <li>
                     <Moments trackId={track.id} />
                   </li>
@@ -157,5 +162,15 @@ function Moments({ trackId }: { trackId: string }) {
         </li>
       </ul>
     </>
+  )
+}
+
+function TrackThumbnail({ track }: { track: Track }) {
+  const thumbnail = useTrackThumbnail(track)
+
+  return (
+    <a href={thumbnail} target='_blank' rel='noreferrer noopener' style={{ color: 'white' }}>
+      <img src={thumbnail} alt='' height={40} style={{ verticalAlign: 'middle' }} /> Video thumbnail
+    </a>
   )
 }
