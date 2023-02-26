@@ -4,12 +4,13 @@ import {
   CollectionReference,
   deleteDoc,
   doc,
-  getDoc,
+  getDocs,
   getFirestore,
   onSnapshot,
   query,
   updateDoc,
   where,
+  writeBatch,
 } from 'firebase/firestore'
 import {
   createContext,
@@ -33,6 +34,7 @@ const TracksContext = createContext<TracksContextType>({
   deleteTrack: noop,
   isLoading: false,
   tracks: [],
+  userTracks: [],
 })
 
 export default function TracksProvider({ children }: PropsWithChildren) {
@@ -47,16 +49,14 @@ export default function TracksProvider({ children }: PropsWithChildren) {
     async (track: TrackData) => {
       // Add track
       const trackRef = await addDoc(collection(db, DatabaseEntities.Tracks), track)
+      const userId = user?.uid ?? ''
       const trackId = trackRef?.id ?? ''
 
       // Link track to user
-      const userTrack: UserTrack = { loops: 0, id: trackId }
-      await addDoc(
-        collection(db, DatabaseEntities.Users, track.userId, DatabaseEntities.Tracks),
-        userTrack,
-      )
+      const userTrack: UserTrack = { loops: 0, userId, trackId }
+      await addDoc(collection(db, DatabaseEntities.UserTracks), userTrack)
     },
-    [db],
+    [db, user?.uid],
   )
 
   const updateTrack = useCallback(
@@ -75,14 +75,27 @@ export default function TracksProvider({ children }: PropsWithChildren) {
       const trackRef = doc(tracksRef, id)
       await deleteDoc(trackRef)
 
-      // TODO delete track
+      // Delete user tracks
+      const userTracksRef = collection(
+        db,
+        DatabaseEntities.UserTracks,
+      ) as CollectionReference<UserTrack>
+      const userTracksQuery = query(userTracksRef, where('trackId', '==', id))
+      const userTracks = await getDocs(userTracksQuery)
+      const batch = writeBatch(db)
+
+      for (const doc of userTracks.docs) {
+        batch.delete(doc.ref)
+      }
+
+      await batch.commit()
     },
     [db],
   )
 
   useEffect(() => {
     if (isLogged) {
-      const userTrackIds = userTracks.map((userTrack) => userTrack.id)
+      const userTrackIds = userTracks.map((userTrack) => userTrack.trackId)
 
       if (userTrackIds.length) {
         setIsLoading(isInitialFetch)
@@ -117,6 +130,7 @@ export default function TracksProvider({ children }: PropsWithChildren) {
         deleteTrack,
         isLoading,
         tracks,
+        userTracks,
       }}
     >
       {children}

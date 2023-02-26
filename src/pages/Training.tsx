@@ -1,7 +1,5 @@
 import { Form, Formik } from 'formik'
-import Moments from '../components/Moment/Moments'
 import TrackInfo from '../components/Track/TrackInfo'
-import TrackThumbnail from '../components/Track/TrackThumbnail'
 import Button from '../components/UI/Button'
 import Input from '../components/UI/Input'
 import ProfilePicture from '../components/User/ProfilePicture'

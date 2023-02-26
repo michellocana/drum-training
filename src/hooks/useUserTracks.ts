@@ -1,4 +1,11 @@
-import { collection, CollectionReference, getFirestore, onSnapshot } from 'firebase/firestore'
+import {
+  collection,
+  CollectionReference,
+  getFirestore,
+  onSnapshot,
+  query,
+  where,
+} from 'firebase/firestore'
 import { useEffect, useMemo, useState } from 'react'
 import { app, useAuth } from '../contexts/AuthProvider'
 import { UserTrack } from '../types/auth'
@@ -14,12 +21,11 @@ export default function useUserTracks() {
     if (isLogged) {
       const userTracksRef = collection(
         db,
-        DatabaseEntities.Users,
-        userId,
-        DatabaseEntities.Tracks,
+        DatabaseEntities.UserTracks,
       ) as CollectionReference<UserTrack>
+      const userTracksQuery = query(userTracksRef, where('userId', '==', userId))
 
-      const unsubscribe = onSnapshot(userTracksRef, (snapshot) => {
+      const unsubscribe = onSnapshot(userTracksQuery, (snapshot) => {
         setUserTracks(snapshot.docs.map((doc) => doc.data()))
       })
 

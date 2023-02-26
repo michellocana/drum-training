@@ -1,8 +1,11 @@
+import { UserTrack } from './auth'
+
 export type TracksContextType = {
   addTrack(track: TrackData): Promise<void>
   updateTrack(track: Track): Promise<void>
   deleteTrack(track: Track): Promise<void>
   tracks: Track[]
+  userTracks: UserTrack[]
   isLoading: boolean
 }
 

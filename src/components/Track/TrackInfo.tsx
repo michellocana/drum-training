@@ -11,11 +11,12 @@ type TrackInfoProps = {
 }
 
 export default function TrackInfo({ track }: TrackInfoProps) {
-  const { updateTrack, deleteTrack } = useTracks()
+  const { updateTrack, deleteTrack, userTracks } = useTracks()
+  const userTrack = userTracks.find((userTrack) => userTrack.trackId === track.id)
+
   return (
     <li>
-      {track.name}
-
+      {track.name} (looped <strong>{userTrack?.loops ?? 0}</strong> times)
       <ul>
         <li>
           <Formik initialValues={track} onSubmit={(values) => updateTrack(values)}>

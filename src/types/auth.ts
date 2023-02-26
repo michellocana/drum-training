@@ -14,6 +14,7 @@ export type AuthContextType = {
 }
 
 export type UserTrack = {
-  id: string
+  userId: string
+  trackId: string
   loops: number
 }
