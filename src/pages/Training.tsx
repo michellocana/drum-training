@@ -22,7 +22,7 @@ export default function Training() {
           <ProfilePicture />
         </li>
         <li>
-          Tracks {isLoadingTracks && '(loading...)'}
+          Tracks {isLoadingTracks ? '(loading...)' : `(${tracks.length})`}
           <ul>
             {tracks.map((track, index) => (
               <TrackInfo key={track.id} track={track} />
