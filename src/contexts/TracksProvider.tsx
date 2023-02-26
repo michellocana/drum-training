@@ -2,9 +2,13 @@ import {
   addDoc,
   collection,
   CollectionReference,
+  deleteDoc,
+  doc,
+  getDoc,
   getFirestore,
   onSnapshot,
   query,
+  updateDoc,
   where,
 } from 'firebase/firestore'
 import {
@@ -22,14 +26,17 @@ import { DatabaseEntities } from '../types/database'
 import { TrackData, Track, TracksContextType } from '../types/track'
 import { app, useAuth } from './AuthProvider'
 
+const noop = async () => {}
 const TracksContext = createContext<TracksContextType>({
-  addTrack: async () => {},
+  addTrack: noop,
+  updateTrack: noop,
+  deleteTrack: noop,
   isLoading: false,
   tracks: [],
 })
 
 export default function TracksProvider({ children }: PropsWithChildren) {
-  const { isLogged } = useAuth()
+  const { isLogged, user } = useAuth()
   const db = useMemo(() => getFirestore(app), [])
   const [tracks, setTracks] = useState<Track[]>([])
   const [isInitialFetch, setIsInitialFetch] = useState(true)
@@ -48,6 +55,27 @@ export default function TracksProvider({ children }: PropsWithChildren) {
         collection(db, DatabaseEntities.Users, track.userId, DatabaseEntities.Tracks),
         userTrack,
       )
+    },
+    [db],
+  )
+
+  const updateTrack = useCallback(
+    async ({ id, ...track }: Track) => {
+      const tracksRef = collection(db, DatabaseEntities.Tracks) as CollectionReference<Track>
+      const trackRef = doc(tracksRef, id)
+      await updateDoc<Track>(trackRef, track)
+    },
+    [db],
+  )
+
+  const deleteTrack = useCallback(
+    async ({ id }: Track) => {
+      // Delete track
+      const tracksRef = collection(db, DatabaseEntities.Tracks) as CollectionReference<Track>
+      const trackRef = doc(tracksRef, id)
+      await deleteDoc(trackRef)
+
+      // TODO delete track
     },
     [db],
   )
@@ -85,6 +113,8 @@ export default function TracksProvider({ children }: PropsWithChildren) {
     <TracksContext.Provider
       value={{
         addTrack,
+        updateTrack,
+        deleteTrack,
         isLoading,
         tracks,
       }}
