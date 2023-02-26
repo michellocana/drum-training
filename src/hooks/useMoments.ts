@@ -1,20 +1,41 @@
 import {
+  addDoc,
   collection,
   CollectionReference,
+  deleteDoc,
+  doc,
   getFirestore,
   onSnapshot,
   query,
   where,
 } from 'firebase/firestore'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { app } from '../contexts/AuthProvider'
 import { DatabaseEntities } from '../types/database'
-import { Moment } from '../types/moment'
+import { Moment, NewMoment } from '../types/moment'
 
 export default function useMoments(trackId: string) {
   const [moments, setMoments] = useState<Moment[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const db = useMemo(() => getFirestore(app), [])
+
+  const addMoment = useCallback(
+    async (moment: Omit<NewMoment, 'trackId'>) => {
+      const momentsRef = collection(db, DatabaseEntities.Moments) as CollectionReference<Moment>
+      await addDoc<NewMoment>(momentsRef, { ...moment, trackId })
+    },
+    [db, trackId],
+  )
+
+  // TODO updateMoment
+
+  const deleteMoment = useCallback(
+    async (moment: Moment) => {
+      const momentRef = doc(db, DatabaseEntities.Moments, moment.id)
+      await deleteDoc(momentRef)
+    },
+    [db],
+  )
 
   useEffect(() => {
     if (!isLoading) {
@@ -37,5 +58,13 @@ export default function useMoments(trackId: string) {
     }
   }, [db, isLoading, trackId])
 
-  return { isLoading, moments }
+  return useMemo(
+    () => ({
+      isLoading,
+      moments,
+      addMoment,
+      deleteMoment,
+    }),
+    [addMoment, deleteMoment, isLoading, moments],
+  )
 }

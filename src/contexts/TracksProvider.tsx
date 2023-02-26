@@ -19,7 +19,6 @@ import {
 import useUserTracks from '../hooks/useUserTracks'
 import { UserTrack } from '../types/auth'
 import { DatabaseEntities } from '../types/database'
-import { NewMoment } from '../types/moment'
 import { NewTrack, Track, TracksContextType } from '../types/track'
 import { app, useAuth } from './AuthProvider'
 
@@ -42,10 +41,6 @@ export default function TracksProvider({ children }: PropsWithChildren) {
       // Add track
       const trackRef = await addDoc(collection(db, DatabaseEntities.Tracks), track)
       const trackId = trackRef?.id ?? ''
-
-      // Add moment to track
-      const moment: NewMoment = { name: 'Moment 1', start: 0, end: 10, trackId }
-      await addDoc(collection(db, DatabaseEntities.Moments), moment)
 
       // Link track to user
       const userTrack: UserTrack = { loops: 0, id: trackId }
