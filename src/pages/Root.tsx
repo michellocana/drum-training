@@ -52,7 +52,7 @@ export default function Root() {
                 </h1>
                 <h2 className={s.subtitle}>Sign in to continue.</h2>
               </div>
-              <Form noValidate className={s.form}>
+              <Form noValidate className={s.form} key='signInForm'>
                 <Input name='email' type='email' placeholder='E-mail' />
                 <Input name='password' type='password' placeholder='Password' />
                 {status && <Error>{status}</Error>}
@@ -103,7 +103,7 @@ export default function Root() {
               </h1>
               <h2 className={s.subtitle}>We need just a little more info before you continue.</h2>
             </div>
-            <Form noValidate className={s.form}>
+            <Form noValidate className={s.form} key='optinForm'>
               <Input name='userName' placeholder='User name' />
               <Input name='firstName' placeholder='First name' />
               <div className={s.submitWrapper}>

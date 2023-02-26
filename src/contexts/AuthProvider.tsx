@@ -98,14 +98,14 @@ export default function AuthProvider({ children }: PropsWithChildren) {
             userName: findExtraDataValue('userName', extraDataDocs),
           }
 
-          setIsReady(true)
           setOptin(optinData)
           setUser({ ...user, ...optinData })
-          return
         }
+      } else {
+        setOptin(null)
+        setUser(user)
       }
 
-      setUser(user)
       setIsReady(true)
     })
 

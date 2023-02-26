@@ -118,7 +118,7 @@ export default function TracksProvider({ children }: PropsWithChildren) {
     } else {
       setTracks([])
       setIsInitialFetch(true)
-      setIsLoading(true)
+      setIsLoading(false)
     }
   }, [db, isInitialFetch, isLogged, userTracks])
 
