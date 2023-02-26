@@ -5,9 +5,8 @@ import Input from '../components/UI/Input'
 import ProfilePicture from '../components/User/ProfilePicture'
 import { useAuth } from '../contexts/AuthProvider'
 import { useTracks } from '../contexts/TracksProvider'
-import useDurationLabel from '../hooks/useDurationLabel'
 import useMoments from '../hooks/useMoments'
-import { Moment } from '../types/moment'
+import { Moment, MomentData } from '../types/moment'
 
 export default function Training() {
   const { user, logout } = useAuth()
@@ -70,25 +69,53 @@ export default function Training() {
   )
 }
 
+const MomentSchema = Yup.object().shape({
+  name: Yup.string().required('Required field'),
+  start: Yup.number().required('Required field').lessThan(Yup.ref('end')),
+  end: Yup.number().required('Required field').moreThan(Yup.ref('start')),
+})
+
 function MomentInfo({ moment, onDelete }: { moment: Moment; onDelete(): void }) {
-  const momentStartLabel = useDurationLabel(moment.start)
-  const momentEndLabel = useDurationLabel(moment.end)
+  const { id, ...initialValues } = moment
+  const { updateMoment } = useMoments(initialValues.trackId)
 
   return (
-    <li key={moment.id} style={{ padding: 8 }}>
-      {moment.name + ' / ' + momentStartLabel + ' / ' + momentEndLabel + ' '}
-      <Button onClick={onDelete}>Delete</Button>
+    <li key={id} style={{ padding: 8 }}>
+      <Formik
+        initialValues={initialValues}
+        validationSchema={MomentSchema}
+        onSubmit={async ({ name, start, end }, { setValues }) => {
+          const updatedMoment: MomentData = {
+            name,
+            start: Number(start),
+            end: Number(end),
+            trackId: initialValues.trackId,
+          }
+
+          setValues(updatedMoment)
+          await updateMoment({ ...moment, ...updatedMoment })
+        }}
+      >
+        {({ isSubmitting }) => (
+          <Form style={{ display: 'grid', gridTemplateColumns: 'repeat(5, max-content)', gap: 8 }}>
+            <Input name='name' placeholder='name' size={8} />
+            <Input name='start' placeholder='start' size={3} />
+            <Input name='end' placeholder='end' size={3} />
+            <Button type='submit' isLoading={isSubmitting}>
+              Update
+            </Button>
+            <Button type='button' onClick={onDelete}>
+              Delete
+            </Button>
+          </Form>
+        )}
+      </Formik>
     </li>
   )
 }
 
 function Moments({ trackId }: { trackId: string }) {
   const { isLoading, moments, addMoment, deleteMoment } = useMoments(trackId)
-  const MomentSchema = Yup.object().shape({
-    name: Yup.string().required('Required field'),
-    start: Yup.number().required('Required field').lessThan(Yup.ref('end')),
-    end: Yup.number().required('Required field').moreThan(Yup.ref('start')),
-  })
 
   return (
     <>
@@ -122,7 +149,7 @@ function Moments({ trackId }: { trackId: string }) {
                 <Input name='start' placeholder='start' size={3} />
                 <Input name='end' placeholder='end' size={3} />
                 <Button type='submit' isLoading={isSubmitting}>
-                  Submit
+                  Add
                 </Button>
               </Form>
             )}

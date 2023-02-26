@@ -7,12 +7,13 @@ import {
   getFirestore,
   onSnapshot,
   query,
+  updateDoc,
   where,
 } from 'firebase/firestore'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { app } from '../contexts/AuthProvider'
 import { DatabaseEntities } from '../types/database'
-import { Moment, NewMoment } from '../types/moment'
+import { Moment, MomentData } from '../types/moment'
 
 export default function useMoments(trackId: string) {
   const [moments, setMoments] = useState<Moment[]>([])
@@ -20,14 +21,21 @@ export default function useMoments(trackId: string) {
   const db = useMemo(() => getFirestore(app), [])
 
   const addMoment = useCallback(
-    async (moment: Omit<NewMoment, 'trackId'>) => {
+    async (moment: Omit<MomentData, 'trackId'>) => {
       const momentsRef = collection(db, DatabaseEntities.Moments) as CollectionReference<Moment>
-      await addDoc<NewMoment>(momentsRef, { ...moment, trackId })
+      await addDoc<MomentData>(momentsRef, { ...moment, trackId })
     },
     [db, trackId],
   )
 
-  // TODO updateMoment
+  const updateMoment = useCallback(
+    async ({ id, ...updatedMoment }: Moment) => {
+      const momentsRef = collection(db, DatabaseEntities.Moments) as CollectionReference<MomentData>
+      const momentRef = doc(momentsRef, id)
+      await updateDoc<MomentData>(momentRef, updatedMoment)
+    },
+    [db],
+  )
 
   const deleteMoment = useCallback(
     async (moment: Moment) => {
@@ -63,8 +71,9 @@ export default function useMoments(trackId: string) {
       isLoading,
       moments,
       addMoment,
+      updateMoment,
       deleteMoment,
     }),
-    [addMoment, deleteMoment, isLoading, moments],
+    [addMoment, updateMoment, deleteMoment, isLoading, moments],
   )
 }

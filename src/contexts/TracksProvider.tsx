@@ -19,7 +19,7 @@ import {
 import useUserTracks from '../hooks/useUserTracks'
 import { UserTrack } from '../types/auth'
 import { DatabaseEntities } from '../types/database'
-import { NewTrack, Track, TracksContextType } from '../types/track'
+import { TrackData, Track, TracksContextType } from '../types/track'
 import { app, useAuth } from './AuthProvider'
 
 const TracksContext = createContext<TracksContextType>({
@@ -37,7 +37,7 @@ export default function TracksProvider({ children }: PropsWithChildren) {
   const userTracks = useUserTracks()
 
   const addTrack = useCallback(
-    async (track: NewTrack) => {
+    async (track: TrackData) => {
       // Add track
       const trackRef = await addDoc(collection(db, DatabaseEntities.Tracks), track)
       const trackId = trackRef?.id ?? ''

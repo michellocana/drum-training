@@ -1,5 +1,5 @@
 export type TracksContextType = {
-  addTrack(track: NewTrack): Promise<void>
+  addTrack(track: TrackData): Promise<void>
   tracks: Track[]
   isLoading: boolean
 }
@@ -12,4 +12,4 @@ export type Track = {
   userId: string
 }
 
-export type NewTrack = Omit<Track, 'id'>
+export type TrackData = Omit<Track, 'id'>

@@ -8,7 +8,7 @@ export type Moment = {
   trackId: string
 }
 
-export type NewMoment = Omit<Moment, 'id'>
+export type MomentData = Omit<Moment, 'id'>
 
 export type MomentContextType = {
   moments: Moment[]
