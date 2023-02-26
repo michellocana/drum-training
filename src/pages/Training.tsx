@@ -13,7 +13,7 @@ export default function Training() {
   return (
     <div style={{ padding: 40 }}>
       <h1 style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-        Infos <Button onClick={() => logout()}>logout</Button>
+        Infos <Button onClick={() => logout()}>Sign out</Button>
       </h1>
       <ul style={{ color: 'white' }}>
         <li>Username: {user?.userName}</li>
