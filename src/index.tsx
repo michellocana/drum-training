@@ -7,7 +7,10 @@ import Root from './pages/Root'
 import Training from './pages/Training'
 import { ROUTES } from './constants/routes'
 import TracksProvider from './contexts/TracksProvider'
+import PlayerProvider from './contexts/PlayerProvider'
+import MomentsProvider from './contexts/MomentsProvider'
 
+// TODO: fix base url behavior on github pages
 const root = ReactDOM.createRoot(document.querySelector('#root')!)
 
 root.render(
@@ -15,10 +18,19 @@ root.render(
     <BrowserRouter>
       <AuthProvider>
         <TracksProvider>
-          <Routes>
-            <Route path={ROUTES.ROOT} element={<Root />} />
-            <Route path={ROUTES.TRAINING} element={<Training />} />
-          </Routes>
+          <MomentsProvider>
+            <Routes>
+              <Route path={ROUTES.ROOT} element={<Root />} />
+              <Route
+                path={ROUTES.TRAINING}
+                element={
+                  <PlayerProvider>
+                    <Training />
+                  </PlayerProvider>
+                }
+              />
+            </Routes>
+          </MomentsProvider>
         </TracksProvider>
       </AuthProvider>
     </BrowserRouter>

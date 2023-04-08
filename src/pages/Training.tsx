@@ -1,4 +1,6 @@
 import { Form, Formik } from 'formik'
+import Controls from '../components/Controls'
+import Player from '../components/Player'
 import TrackInfo from '../components/Track/TrackInfo'
 import Button from '../components/UI/Button'
 import Input from '../components/UI/Input'
@@ -54,6 +56,11 @@ export default function Training() {
           </Form>
         )}
       </Formik>
+
+      <hr style={{ marginTop: 30, marginBottom: 30 }} />
+
+      <Player />
+      <Controls />
     </div>
   )
 }

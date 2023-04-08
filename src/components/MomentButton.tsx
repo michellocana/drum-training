@@ -1,7 +1,7 @@
-import useMoment from '../hooks/useMoment'
-import useDurationLabel from '../hooks/useDurationLabel'
+import { useMoments } from '../contexts/MomentsProvider'
 import usePlayer from '../hooks/usePlayer'
 import { Moment } from '../types/moment'
+import Button from './UI/Button'
 
 type MomentButtonProps = {
   moment: Moment
@@ -9,18 +9,18 @@ type MomentButtonProps = {
 
 export default function MomentButton({ moment }: MomentButtonProps) {
   const { startLoop } = usePlayer()
-  const { setCurrentMoment } = useMoment()
-  const momentStartLabel = useDurationLabel(moment.start)
-  const momentEndLabel = useDurationLabel(moment.end)
+  const { selectMoment, currentMoment } = useMoments()
+  const isCurrentMoment = currentMoment?.id === moment.id
 
   return (
-    <button
+    <Button
+      disabled={isCurrentMoment}
       onClick={() => {
-        setCurrentMoment(moment)
+        selectMoment(moment)
         startLoop()
       }}
     >
-      {moment.name} / {momentStartLabel}/{momentEndLabel}
-    </button>
+      Select
+    </Button>
   )
 }

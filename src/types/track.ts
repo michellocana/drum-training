@@ -4,9 +4,11 @@ export type TracksContextType = {
   addTrack(track: TrackData): Promise<void>
   updateTrack(track: Track): Promise<void>
   deleteTrack(track: Track): Promise<void>
+  selectTrack(track: Track): void
+  currentTrack?: Track
+  isLoading: boolean
   tracks: Track[]
   userTracks: UserTrack[]
-  isLoading: boolean
 }
 
 export type Track = {

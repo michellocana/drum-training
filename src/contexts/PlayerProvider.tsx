@@ -7,8 +7,10 @@ import {
   useState,
 } from 'react'
 import YouTube from 'react-youtube'
-import useMoment from '../hooks/useMoment'
-import { PlaybackRate, PlayerContextType, VideoInfo, YoutubePlayer } from '../types/player'
+import { Moment } from '../types/moment'
+import { PlaybackRate, PlayerContextType, TrackInfo, YoutubePlayer } from '../types/player'
+import { useMoments } from './MomentsProvider'
+import { useTracks } from './TracksProvider'
 
 export const PlayerContext = createContext<PlayerContextType>({
   startLoop: () => {},
@@ -23,11 +25,12 @@ export const PlayerContext = createContext<PlayerContextType>({
 export const playerRef = createRef<YouTube>()
 
 export default function PlayerProvider({ children }: PropsWithChildren) {
-  const { currentMoment } = useMoment()
-  const [currentVideoId] = useState('InFbBlpDTfQ')
-  const [currentVideoInfo, setCurrentVideoInfo] = useState<VideoInfo>()
+  const { currentTrack } = useTracks()
+  const { currentMoment } = useMoments()
+  const [trackInfo, setTrackInfo] = useState<TrackInfo>()
   const [isReady, setIsReady] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
+
   const getInternalPlayer = useCallback(() => {
     return playerRef.current?.getInternalPlayer() as YoutubePlayer | undefined
   }, [])
@@ -54,28 +57,26 @@ export default function PlayerProvider({ children }: PropsWithChildren) {
 
   // Initial loop control
   useEffect(() => {
-    if (isReady) {
+    if (isReady && currentMoment) {
       startLoop()
     }
-  }, [isReady, startLoop])
+  }, [currentMoment, isReady, startLoop])
 
   // Current video info update
   useEffect(() => {
     async function getInfo() {
       const player = getInternalPlayer()
 
-      setCurrentVideoInfo({
-        id: currentVideoId,
+      setTrackInfo({
         time: (await player?.getCurrentTime()) ?? 0,
         duration: (await player?.getDuration()) ?? 0,
-        thumb: `https://img.youtube.com/vi/${currentVideoId}/0.jpg`,
       })
     }
 
-    if (isReady && currentVideoId) {
+    if (isReady && currentTrack) {
       getInfo()
     }
-  }, [isReady, currentVideoId, getInternalPlayer])
+  }, [isReady, getInternalPlayer, currentTrack])
 
   // Time update
   useEffect(() => {
@@ -96,7 +97,7 @@ export default function PlayerProvider({ children }: PropsWithChildren) {
       setTimeout(() => {
         intervalId = window.setInterval(async () => {
           const currentTime = (await player?.getCurrentTime()) ?? 0
-          setCurrentVideoInfo((currentState) => {
+          setTrackInfo((currentState) => {
             if (currentState) {
               return {
                 ...currentState,
@@ -127,8 +128,7 @@ export default function PlayerProvider({ children }: PropsWithChildren) {
   return (
     <PlayerContext.Provider
       value={{
-        currentVideoId,
-        currentVideoInfo,
+        trackInfo,
         startLoop,
         setPlaybackRate,
         togglePlay,

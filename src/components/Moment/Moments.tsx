@@ -1,23 +1,19 @@
 import { Form, Formik } from 'formik'
-import useMoments from '../../hooks/useMoments'
+import { useMoments } from '../../contexts/MomentsProvider'
 import { MomentSchema } from '../../types/schema'
 import Button from '../UI/Button'
 import Input from '../UI/Input'
 import MomentInfo from './MomentInfo'
 
-type MomentsProps = {
-  trackId: string
-}
-
-export default function Moments({ trackId }: MomentsProps) {
-  const { isLoading, moments, addMoment, deleteMoment } = useMoments(trackId)
+export default function Moments() {
+  const { isLoading, moments, addMoment } = useMoments()
 
   return (
     <>
       Moments {isLoading && '(loading...)'}
       <ul>
-        {moments.map((moment) => (
-          <MomentInfo key={moment.id} moment={moment} onDelete={() => deleteMoment(moment)} />
+        {moments?.map((moment) => (
+          <MomentInfo key={moment.id} moment={moment} />
         ))}
         <li style={{ padding: 8 }}>
           <Formik

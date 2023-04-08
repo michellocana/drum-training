@@ -11,8 +11,9 @@ type TrackInfoProps = {
 }
 
 export default function TrackInfo({ track }: TrackInfoProps) {
-  const { updateTrack, deleteTrack, userTracks } = useTracks()
+  const { updateTrack, deleteTrack, userTracks, selectTrack, currentTrack } = useTracks()
   const userTrack = userTracks.find((userTrack) => userTrack.trackId === track.id)
+  const isCurrentTrack = track.id === currentTrack?.id
 
   return (
     <li>
@@ -35,6 +36,14 @@ export default function TrackInfo({ track }: TrackInfoProps) {
                   <Button type='button' onClick={() => deleteTrack(track)}>
                     Delete
                   </Button>
+
+                  <Button
+                    type='button'
+                    onClick={() => selectTrack(track)}
+                    disabled={isCurrentTrack}
+                  >
+                    Select
+                  </Button>
                 </div>
               </Form>
             )}
@@ -42,7 +51,7 @@ export default function TrackInfo({ track }: TrackInfoProps) {
         </li>
 
         <li>
-          <Moments trackId={track.id} />
+          <Moments />
         </li>
       </ul>
     </li>

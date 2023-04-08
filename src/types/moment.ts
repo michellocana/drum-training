@@ -1,5 +1,3 @@
-import { Dispatch, SetStateAction } from 'react'
-
 export type Moment = {
   id: string
   name: string
@@ -11,7 +9,11 @@ export type Moment = {
 export type MomentData = Omit<Moment, 'id'>
 
 export type MomentContextType = {
-  moments: Moment[]
+  addMoment(moment: Omit<MomentData, 'trackId'>): Promise<void>
+  updateMoment(moment: Moment): Promise<void>
+  deleteMoment(moment: Moment): Promise<void>
+  selectMoment(moment: Moment): void
+  moments?: Moment[]
   currentMoment?: Moment
-  setCurrentMoment: Dispatch<SetStateAction<Moment>>
+  isLoading: boolean
 }

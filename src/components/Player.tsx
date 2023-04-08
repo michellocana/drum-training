@@ -1,16 +1,24 @@
 import YouTube from 'react-youtube'
+import { useMoments } from '../contexts/MomentsProvider'
 import { playerRef } from '../contexts/PlayerProvider'
-import useMoment from '../hooks/useMoment'
+import { useTracks } from '../contexts/TracksProvider'
 import usePlayer from '../hooks/usePlayer'
+import { useYoutubeId } from '../hooks/useYoutubeId'
 
 export default function Player() {
-  const { currentVideoId, startLoop, setIsReady, setIsPlaying } = usePlayer()
-  const { currentMoment } = useMoment()
+  const { currentTrack } = useTracks()
+  const { currentMoment } = useMoments()
+  const { startLoop, setIsReady, setIsPlaying } = usePlayer()
+  const videoId = useYoutubeId(currentTrack?.videoUrl)
+
+  if (!videoId) {
+    return <p>Select a song to continue.</p>
+  }
 
   return (
     <YouTube
       ref={playerRef}
-      videoId={currentVideoId}
+      videoId={videoId}
       opts={{ playerVars: { end: currentMoment?.end, modestbranding: 1 } }}
       onReady={() => setIsReady(true)}
       onEnd={() => startLoop()}

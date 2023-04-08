@@ -32,6 +32,7 @@ const TracksContext = createContext<TracksContextType>({
   addTrack: noop,
   updateTrack: noop,
   deleteTrack: noop,
+  selectTrack: noop,
   isLoading: false,
   tracks: [],
   userTracks: [],
@@ -44,6 +45,7 @@ export default function TracksProvider({ children }: PropsWithChildren) {
   const [isInitialFetch, setIsInitialFetch] = useState(true)
   const [isLoading, setIsLoading] = useState(false)
   const userTracks = useUserTracks()
+  const [currentTrack, setCurrentTrack] = useState<Track>()
 
   const addTrack = useCallback(
     async (track: TrackData) => {
@@ -93,6 +95,9 @@ export default function TracksProvider({ children }: PropsWithChildren) {
     [db],
   )
 
+  const selectTrack = useCallback((track: Track) => setCurrentTrack(track), [])
+
+  // Fetch tracks when user logs in
   useEffect(() => {
     if (isLogged) {
       const userTrackIds = userTracks.map((userTrack) => userTrack.trackId)
@@ -128,6 +133,8 @@ export default function TracksProvider({ children }: PropsWithChildren) {
         addTrack,
         updateTrack,
         deleteTrack,
+        selectTrack,
+        currentTrack,
         isLoading,
         tracks,
         userTracks,
