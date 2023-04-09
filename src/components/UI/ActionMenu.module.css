@@ -1,0 +1,47 @@
+.button {
+  border: none;
+  background: transparent;
+  box-shadow: none;
+  appearance: none;
+  padding: 0;
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
+}
+
+.menu {
+  border: 2px solid var(--grey-400);
+  color: var(--grey-900);
+  composes: paragraph from global;
+  background: var(--white);
+  border-radius: 8px;
+}
+
+.menuItem {
+  padding: 4px 21px;
+  text-align: center;
+  transition: var(--transition);
+  border-radius: none;
+  appearance: none;
+  cursor: pointer;
+}
+
+.menuItem:hover,
+.menuItem:focus {
+  background: var(--grey-300);
+  box-shadow: none;
+}
+
+.menuItem:focus {
+  outline-color: var(--blue-500);
+}
+
+.menuItem:first-child {
+  border-top-left-radius: inherit;
+  border-top-right-radius: inherit;
+}
+
+.menuItem:last-child {
+  border-bottom-left-radius: inherit;
+  border-bottom-right-radius: inherit;
+}
