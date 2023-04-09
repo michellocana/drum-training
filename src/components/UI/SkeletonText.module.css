@@ -1,0 +1,44 @@
+.wrapper {
+  display: block;
+  border-radius: 4px;
+  background: var(--grey-500);
+  position: relative;
+  overflow: hidden;
+}
+
+.wrapper::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 300%;
+  height: 100%;
+  z-index: 1;
+  background: linear-gradient(
+    to right,
+    transparent,
+    30%,
+    rgba(255, 255, 255, 0.5),
+    70%,
+    transparent
+  );
+  animation: move 1s linear infinite;
+}
+
+.text {
+  display: inline-block;
+  font-family: var(--open-sans);
+  color: transparent;
+  position: relative;
+  pointer-events: none;
+}
+
+@keyframes move {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-100%);
+  }
+}
