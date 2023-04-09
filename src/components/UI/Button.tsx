@@ -3,9 +3,10 @@ import cn from 'classnames'
 
 import s from './Button.module.css'
 
-type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> &
+export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> &
   PropsWithChildren<{
     isLoading?: boolean
+    theme?: 'default' | 'white'
   }>
 
 export default function Button({
@@ -13,14 +14,15 @@ export default function Button({
   isLoading,
   disabled,
   className,
+  theme = 'default',
   ...otherProps
 }: ButtonProps) {
+  const buttonClassName = cn(s.button, className, {
+    [s.buttonIsWhite]: theme === 'white',
+  })
+
   return (
-    <button
-      className={cn(s.button, className, { [s.buttonIsLoading]: isLoading })}
-      disabled={disabled || isLoading}
-      {...otherProps}
-    >
+    <button className={buttonClassName} disabled={disabled || isLoading} {...otherProps}>
       {isLoading && <div className={s.spinner} />}
       {children}
     </button>

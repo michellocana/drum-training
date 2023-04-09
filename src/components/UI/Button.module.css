@@ -3,8 +3,9 @@
   box-shadow: none;
   border: none;
   border-radius: 40px;
-  padding: 6.5px 22px 6.5px 22px;
+  padding: 4.5px 20px 4.5px 20px;
   background: var(--blue-600);
+  border: 2px solid var(--blue-600);
   color: var(--white);
   font-family: var(--open-sans);
   font-weight: bolder;
@@ -16,6 +17,7 @@
 
 .button:hover {
   background: var(--blue-700);
+  border-color: var(--blue-700);
 }
 
 .button:disabled {
@@ -27,14 +29,30 @@
   cursor: not-allowed;
 }
 
+.buttonIsWhite {
+  color: var(--blue-600);
+  border-color: var(--blue-600);
+  background: var(--white);
+}
+
+.buttonIsWhite:hover {
+  color: var(--blue-800);
+  border-color: var(--blue-800);
+  background-color: var(--blue-100);
+}
+
 .spinner {
-  width: 12px;
-  height: 12px;
-  border: 2px solid var(--grey-400);
+  width: 14px;
+  height: 14px;
+  color: inherit;
+  border: 2px solid;
   border-top-color: transparent;
   border-radius: 50%;
   animation: spinnerRotate 1s linear infinite;
   display: inline-block;
+}
+
+.spinner:not(:only-child) {
   margin-right: 8px;
 }
 

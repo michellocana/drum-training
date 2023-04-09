@@ -12,6 +12,11 @@
   height: 34px;
 }
 
-.plusIcon {
+.plusIcon,
+.cancelIcon {
   width: 14px;
+}
+
+.checkIcon {
+  width: 16px;
 }

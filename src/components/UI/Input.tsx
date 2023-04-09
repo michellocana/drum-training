@@ -1,4 +1,4 @@
-import { ErrorMessage, useField } from 'formik'
+import { ErrorMessage, FieldValidator, useField } from 'formik'
 import cn from 'classnames'
 
 import s from './Input.module.css'
@@ -6,11 +6,12 @@ import Error from './Error'
 
 type InputProps = React.HTMLProps<HTMLInputElement> & {
   name: string
+  validate?: FieldValidator
   type?: string
 }
 
-export default function Input({ name, type = 'text', ...otherProps }: InputProps) {
-  const [field, meta] = useField<string>(name)
+export default function Input({ name, validate, type = 'text', ...otherProps }: InputProps) {
+  const [field, meta] = useField<string>({ name, validate })
   const hasError = !!meta.error && meta.touched
 
   return (

@@ -1,0 +1,26 @@
+.wrapper {
+  display: grid;
+  grid-template-columns: 1fr max-content;
+  align-items: center;
+  gap: 16px;
+  margin-top: 31px;
+}
+
+.title {
+  color: var(--white);
+  composes: h2 from global;
+}
+
+.form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  grid-column: 1 / -1;
+}
+
+.submitWrapper {
+  display: grid;
+  grid-template-columns: 1fr repeat(2, max-content);
+  grid-column: 1 / -1;
+  gap: 8px;
+}

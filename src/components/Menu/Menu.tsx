@@ -1,6 +1,7 @@
 import { useAuth } from '../../contexts/AuthProvider'
 import { useTracks } from '../../contexts/TracksProvider'
 import Pluralize from '../Pluralize'
+import TrackForm from '../Track/TrackForm'
 import ActionMenu from '../UI/ActionMenu'
 import SkeletonText from '../UI/SkeletonText'
 import ProfilePicture from '../User/ProfilePicture'
@@ -15,7 +16,7 @@ export default function Menu2() {
     <nav className={s.container}>
       <div className={s.userInfo}>
         <ProfilePicture />
-        <span className={s.userName}>{user?.firstName}</span>
+        <h1 className={s.userName}>{user?.firstName}</h1>
         <span className={s.trackCount}>
           {isLoadingTracks ? (
             <SkeletonText
@@ -39,6 +40,8 @@ export default function Menu2() {
           </ActionMenu.Item>
         </ActionMenu>
       </div>
+
+      <TrackForm />
     </nav>
   )
 }

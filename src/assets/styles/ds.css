@@ -13,6 +13,16 @@
   letter-spacing: -0.017em;
 }
 
+/* Heading/Heading 2 */
+.h2 {
+  font-family: var(--open-sans);
+  font-style: normal;
+  font-weight: 800;
+  font-size: 24px;
+  line-height: 1.25;
+  letter-spacing: -0.36px;
+}
+
 /* Link/Info link */
 .link,
 .info {
