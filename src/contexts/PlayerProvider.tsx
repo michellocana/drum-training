@@ -7,7 +7,6 @@ import {
   useState,
 } from 'react'
 import YouTube from 'react-youtube'
-import { Moment } from '../types/moment'
 import { PlaybackRate, PlayerContextType, TrackInfo, YoutubePlayer } from '../types/player'
 import { useMoments } from './MomentsProvider'
 import { useTracks } from './TracksProvider'

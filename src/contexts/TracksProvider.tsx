@@ -43,7 +43,7 @@ export default function TracksProvider({ children }: PropsWithChildren) {
   const db = useMemo(() => getFirestore(app), [])
   const [tracks, setTracks] = useState<Track[]>([])
   const [isInitialFetch, setIsInitialFetch] = useState(true)
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(isLogged)
   const userTracks = useUserTracks()
   const [currentTrack, setCurrentTrack] = useState<Track>()
 

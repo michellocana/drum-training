@@ -2,6 +2,8 @@ import { useMemo } from 'react'
 import { Md5 } from 'ts-md5'
 import { useAuth } from '../../contexts/AuthProvider'
 
+import s from './ProfilePicture.module.css'
+
 export default function ProfilePicture() {
   const { user } = useAuth()
   const email = user?.email ?? ''
@@ -12,9 +14,5 @@ export default function ProfilePicture() {
     return null
   }
 
-  return (
-    <a href={img} target='_blank' rel='noreferrer noopener' style={{ color: 'white' }}>
-      <img src={img} alt='' height={30} style={{ verticalAlign: 'middle' }} /> Profile picture
-    </a>
-  )
+  return <img src={img} alt='' className={s.container} width={80} height={80} />
 }

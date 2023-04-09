@@ -9,6 +9,8 @@ import { ROUTES } from './constants/routes'
 import TracksProvider from './contexts/TracksProvider'
 import PlayerProvider from './contexts/PlayerProvider'
 import MomentsProvider from './contexts/MomentsProvider'
+import Layout from './pages/Layout'
+import BaseLayout from './components/UI/BaseLayout'
 
 // TODO: fix base url behavior on github pages
 const root = ReactDOM.createRoot(document.querySelector('#root')!)
@@ -19,17 +21,20 @@ root.render(
       <AuthProvider>
         <TracksProvider>
           <MomentsProvider>
-            <Routes>
-              <Route path={ROUTES.ROOT} element={<Root />} />
-              <Route
-                path={ROUTES.TRAINING}
-                element={
-                  <PlayerProvider>
-                    <Training />
-                  </PlayerProvider>
-                }
-              />
-            </Routes>
+            <BaseLayout>
+              <Routes>
+                <Route path={ROUTES.ROOT} element={<Root />} />
+                <Route
+                  path={ROUTES.TRAINING}
+                  element={
+                    <PlayerProvider>
+                      <Training />
+                    </PlayerProvider>
+                  }
+                />
+                <Route path={'/layout'} element={<Layout />} />
+              </Routes>
+            </BaseLayout>
           </MomentsProvider>
         </TracksProvider>
       </AuthProvider>
