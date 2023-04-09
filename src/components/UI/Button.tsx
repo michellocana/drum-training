@@ -8,10 +8,16 @@ type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> &
     isLoading?: boolean
   }>
 
-export default function Button({ children, isLoading, disabled, ...otherProps }: ButtonProps) {
+export default function Button({
+  children,
+  isLoading,
+  disabled,
+  className,
+  ...otherProps
+}: ButtonProps) {
   return (
     <button
-      className={cn(s.button, { [s.buttonIsLoading]: isLoading })}
+      className={cn(s.button, className, { [s.buttonIsLoading]: isLoading })}
       disabled={disabled || isLoading}
       {...otherProps}
     >

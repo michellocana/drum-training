@@ -19,8 +19,6 @@ export default function SkeletonText({ text, className, fontSize, lineHeight }: 
     }
   }, [text])
 
-  console.log(rect)
-
   return (
     <span
       className={cn(s.wrapper, className)}

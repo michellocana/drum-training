@@ -1,0 +1,17 @@
+.button {
+  padding: 0;
+}
+
+.buttonIsTiny {
+  width: 24px;
+  height: 24px;
+}
+
+.buttonIsSmall {
+  width: 34px;
+  height: 34px;
+}
+
+.plusIcon {
+  width: 14px;
+}
