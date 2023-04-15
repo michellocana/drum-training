@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import IconButton from '../UI/IconButton'
 
 import { Form, Formik } from 'formik'
@@ -7,16 +7,24 @@ import { useTracks } from '../../contexts/TracksProvider'
 import { TrackSchema } from '../../types/schema'
 import Input from '../UI/Input'
 import s from './TrackForm.module.css'
+import { TrackCard } from './TrackCard'
 
 export default function TrackForm() {
   const [isAddingTrack, setIsAddingTrack] = useState(false)
   const { user } = useAuth()
-  const { addTrack } = useTracks()
+  const { addTrack, isLoading: isLoadingTracks, tracks, userTracks } = useTracks()
 
-  return (
-    <div className={s.wrapper}>
-      <h2 className={s.title}>Your tracks</h2>
-      {isAddingTrack ? (
+  const renderAddTrackButton = useCallback(() => {
+    if (!isAddingTrack) {
+      return <IconButton icon='plus' onClick={() => setIsAddingTrack(true)} />
+    }
+
+    return null
+  }, [isAddingTrack])
+
+  const renderAddTrackForm = useCallback(() => {
+    if (isAddingTrack) {
+      return (
         <Formik
           validationSchema={TrackSchema}
           initialValues={{ name: '', artist: '', videoUrl: '' }}
@@ -44,9 +52,46 @@ export default function TrackForm() {
             </Form>
           )}
         </Formik>
-      ) : (
-        <IconButton icon='plus' onClick={() => setIsAddingTrack(true)} />
-      )}
+      )
+    }
+
+    return null
+  }, [addTrack, isAddingTrack, user?.uid])
+
+  const renderTrackList = useCallback(() => {
+    return (
+      <ul className={s.trackList}>
+        {isLoadingTracks ? (
+          <TrackCard
+            userTrack={{
+              trackId: '1',
+              loops: 20,
+              userId: '1',
+            }}
+            track={{
+              id: '1',
+              artist: 'Thundercat',
+              name: 'Them Changes',
+              userId: '1',
+              videoUrl: 'https://www.youtube.com/watch?v=GNCd_ERZvZM',
+            }}
+          />
+        ) : (
+          userTracks.map((userTrack) => {
+            const track = tracks.find((track) => track.id === userTrack.trackId)
+            return track && <TrackCard userTrack={userTrack} track={track} />
+          })
+        )}
+      </ul>
+    )
+  }, [isLoadingTracks, tracks, userTracks])
+
+  return (
+    <div className={s.wrapper}>
+      <h2 className={s.title}>Your tracks</h2>
+      {renderAddTrackButton()}
+      {renderAddTrackForm()}
+      {renderTrackList()}
     </div>
   )
 }

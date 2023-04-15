@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { Md5 } from 'ts-md5'
 import { useAuth } from '../../contexts/AuthProvider'
-
+import RoundImage from '../UI/RoundImage'
 import s from './ProfilePicture.module.css'
 
 export default function ProfilePicture() {
@@ -13,6 +13,5 @@ export default function ProfilePicture() {
   if (!user) {
     return null
   }
-
-  return <img src={img} alt='' className={s.container} width={80} height={80} />
+  return <RoundImage src={img} className={s.container} size='large' />
 }

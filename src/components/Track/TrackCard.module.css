@@ -1,0 +1,72 @@
+.wrapper {
+  list-style-type: none;
+}
+
+.card {
+  width: 100%;
+  padding: 16px;
+  text-align: left;
+  border: none;
+  appearance: none;
+  cursor: pointer;
+  color: var(--white);
+  background-color: var(--grey-750);
+  border-bottom: 1px solid var(--grey-650);
+  transition: var(--transition);
+}
+
+.cardIsActive {
+  background-color: var(--grey-800);
+}
+
+:first-of-type > .card {
+  border-top: 1px solid var(--grey-650);
+}
+
+.card:hover {
+  background-color: var(--grey-650);
+}
+
+.info {
+  display: grid;
+  grid-template-columns: max-content 1fr max-content;
+  grid-template-areas:
+    'image name   loops'
+    'image artist loops';
+  gap: 0 10px;
+}
+
+.singleLineText {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.name {
+  grid-area: name;
+  align-self: end;
+  composes: h4 from global;
+  composes: singleLineText;
+}
+
+.artist {
+  grid-area: artist;
+  align-self: start;
+  composes: small from global;
+  composes: singleLineText;
+}
+
+.loops {
+  grid-area: loops;
+  align-self: center;
+  display: grid;
+  grid-template-columns: repeat(2, max-content);
+  gap: 3px;
+  align-items: end;
+  line-height: 1;
+  composes: formSecondary from global;
+}
+
+.image {
+  grid-area: image;
+}
