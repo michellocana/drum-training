@@ -3,7 +3,7 @@ import { useMoments } from '../contexts/MomentsProvider'
 import { playerRef } from '../contexts/PlayerProvider'
 import { useTracks } from '../contexts/TracksProvider'
 import usePlayer from '../hooks/usePlayer'
-import { useYoutubeId } from '../hooks/useYoutubeId'
+import useYoutubeId from '../hooks/useYoutubeId'
 
 export default function Player() {
   const { currentTrack } = useTracks()

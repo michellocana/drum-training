@@ -1,5 +1,5 @@
 import { Track } from '../types/track'
-import { useYoutubeId } from './useYoutubeId'
+import useYoutubeId from './useYoutubeId'
 
 export default function useTrackThumbnail({ videoUrl }: Track) {
   const youtubeId = useYoutubeId(videoUrl)
