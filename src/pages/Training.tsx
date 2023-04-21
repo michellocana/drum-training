@@ -4,13 +4,14 @@ import Player from '../components/Player'
 import TrackInfo from '../components/Track/TrackInfo'
 import Button from '../components/UI/Button'
 import Input from '../components/UI/Input'
-import ProfilePicture from '../components/User/ProfilePicture'
 import { useAuth } from '../contexts/AuthProvider'
 import { useTracks } from '../contexts/TracksProvider'
+import useProfilePicture from '../hooks/useProfilePicture'
 
 export default function Training() {
   const { user, logout } = useAuth()
   const { isLoading: isLoadingTracks, tracks, addTrack } = useTracks()
+  const profilePicture = useProfilePicture()
 
   return (
     <div style={{ padding: 40 }}>
@@ -21,7 +22,7 @@ export default function Training() {
         <li>Username: {user?.userName}</li>
         <li>Firstname: {user?.firstName}</li>
         <li>
-          <ProfilePicture />
+          <img src={profilePicture} alt='' />
         </li>
         <li>
           Tracks {isLoadingTracks ? '(loading...)' : `(${tracks.length})`}

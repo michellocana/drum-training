@@ -1,0 +1,21 @@
+.button {
+  width: 40px;
+  height: 40px;
+  margin: 0 -6px;
+  padding: 8px 6px;
+  z-index: 3;
+  position: relative;
+  composes: buttonReset from global;
+}
+
+.bar {
+  background: var(--white);
+  width: 28px;
+  height: 4px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+}

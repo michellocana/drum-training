@@ -1,4 +1,11 @@
 .wrapper {
+  width: 100%;
   display: grid;
   grid-template-columns: 340px 1fr;
+}
+
+@media screen and (max-width: 940px) {
+  .wrapper {
+    grid-template-columns: 1fr;
+  }
 }

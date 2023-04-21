@@ -1,0 +1,36 @@
+.container {
+  display: grid;
+  gap: 2px;
+  grid-template-columns: 1fr max-content;
+  grid-template-rows: repeat(2, max-content);
+  grid-template-areas:
+    'userName   userName'
+    'trackCount trackCount';
+}
+
+.containerHasChildren {
+  grid-template-areas:
+    'userName   children'
+    'trackCount .';
+}
+
+.userName {
+  grid-area: userName;
+  align-self: end;
+  composes: h1 from global;
+}
+
+.trackCount {
+  grid-area: trackCount;
+  composes: info from global;
+  align-self: start;
+}
+
+.skeletonTrackCount {
+  background: var(--blue-500);
+}
+
+.children {
+  grid-area: children;
+  align-self: center;
+}

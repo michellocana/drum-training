@@ -7,11 +7,14 @@ import IconButton from '../UI/IconButton'
 import Input from '../UI/Input'
 import TrackCard from './TrackCard'
 import s from './TrackForm.module.css'
+import MenuUserInfo from '../Menu/MenuUserInfo'
+import useIsMobile from '../../hooks/useIsMobile'
 
 export default function TrackForm() {
   const [isAddingTrack, setIsAddingTrack] = useState(false)
   const { user } = useAuth()
   const { addTrack, isLoading: isLoadingTracks, tracks, userTracks } = useTracks()
+  const isMobile = useIsMobile()
 
   const renderAddTrackButton = useCallback(() => {
     if (!isAddingTrack) {
@@ -20,6 +23,14 @@ export default function TrackForm() {
 
     return null
   }, [isAddingTrack])
+
+  const renderTopContent = useCallback(() => {
+    if (isMobile) {
+      return <MenuUserInfo>{renderAddTrackButton()}</MenuUserInfo>
+    }
+
+    return <h2 className={s.title}>Your tracks</h2>
+  }, [isMobile, renderAddTrackButton])
 
   const renderAddTrackForm = useCallback(() => {
     if (isAddingTrack) {
@@ -62,6 +73,7 @@ export default function TrackForm() {
       <ul className={s.trackList}>
         {isLoadingTracks ? (
           <TrackCard
+            // TODO make skeleton track card
             userTrack={{
               trackId: '1',
               loops: 20,
@@ -78,7 +90,7 @@ export default function TrackForm() {
         ) : (
           userTracks.map((userTrack) => {
             const track = tracks.find((track) => track.id === userTrack.trackId)
-            return track && <TrackCard userTrack={userTrack} track={track} />
+            return track && <TrackCard key={track.id} userTrack={userTrack} track={track} />
           })
         )}
       </ul>
@@ -87,8 +99,8 @@ export default function TrackForm() {
 
   return (
     <div className={s.wrapper}>
-      <h2 className={s.title}>Your tracks</h2>
-      {renderAddTrackButton()}
+      {renderTopContent()}
+      {!isMobile && renderAddTrackButton()}
       {renderAddTrackForm()}
       {renderTrackList()}
     </div>

@@ -22,7 +22,7 @@ export default function TrackCard({ track, userTrack, isActive }: TrackCardProps
 
   return (
     <li className={s.wrapper}>
-      <button className={cardClassName} onClick={() => selectTrack(track)}>
+      <button className={cardClassName} onClick={() => selectTrack(track)} type='button'>
         <RoundImage src={thumbnail} size='small' className={s.image} />
         <h3 className={s.name} title={track.name}>
           {track.name}

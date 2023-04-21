@@ -1,7 +1,13 @@
+.wrapper {
+  display: flex;
+  align-self: stretch;
+}
+
 .container {
-  composes: shadowDark from global;
+  width: 100%;
   padding: 32px 16px 0;
   background-color: var(--grey-800);
+  composes: shadowDark from global;
 }
 
 .userInfo {
@@ -11,20 +17,8 @@
   grid-template-rows: repeat(2, max-content);
 }
 
-.userName {
-  align-self: end;
-  composes: h1 from global;
-}
-
-.trackCount {
-  margin-top: -5px;
-  composes: info from global;
-  grid-column: 2;
-  align-self: start;
-}
-
-.skeletonTrackCount {
-  background: var(--blue-500);
+.profilePicture {
+  grid-row: 1 / -1;
 }
 
 .actionMenu {
@@ -32,4 +26,53 @@
   grid-column: 3;
   align-self: center;
   margin-top: 2px;
+}
+
+@media screen and (max-width: 940px) {
+  .wrapper {
+    align-self: start;
+  }
+
+  .container {
+    width: 100%;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .toggleWrapper {
+    display: grid;
+    justify-content: space-between;
+    grid-template-columns: max-content max-content;
+  }
+
+  .actionMenu {
+    margin-top: 0;
+  }
+
+  .containerMobile {
+    composes: container;
+    padding-top: 10px;
+  }
+
+  .overlay,
+  .overlayBackground {
+    width: 100%;
+    position: fixed;
+    z-index: 2;
+    top: 0;
+    left: 0;
+    bottom: 0;
+  }
+
+  .overlay {
+    max-width: 280px;
+    background: var(--grey-800);
+    padding: 55px 16px 0;
+    composes: shadowDark from global;
+  }
+
+  .overlayBackground {
+    z-index: 1;
+    background: var(--grey-800);
+  }
 }

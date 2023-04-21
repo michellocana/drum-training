@@ -1,47 +1,78 @@
+import { AnimatePresence, motion } from 'framer-motion'
+import { useCallback, useState } from 'react'
 import { useAuth } from '../../contexts/AuthProvider'
-import { useTracks } from '../../contexts/TracksProvider'
-import Pluralize from '../Pluralize'
+import useIsMobile from '../../hooks/useIsMobile'
+import useProfilePicture from '../../hooks/useProfilePicture'
 import TrackForm from '../Track/TrackForm'
 import ActionMenu from '../UI/ActionMenu'
-import SkeletonText from '../UI/SkeletonText'
-import ProfilePicture from '../User/ProfilePicture'
-
+import RoundImage from '../UI/RoundImage'
 import s from './Menu.module.css'
+import MenuToggle from './MenuToggle'
+import MenuUserInfo from './MenuUserInfo'
 
 export default function Menu2() {
-  const { user, logout } = useAuth()
-  const { tracks, isLoading: isLoadingTracks } = useTracks()
+  const { logout } = useAuth()
+  const isMobile = useIsMobile()
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const profilePicture = useProfilePicture()
+
+  const renderActionMenu = useCallback(() => {
+    return (
+      <ActionMenu className={s.actionMenu} isProfilePicture={isMobile} src={profilePicture}>
+        <ActionMenu.Item id='logout' onAction={() => logout()}>
+          Sair
+        </ActionMenu.Item>
+      </ActionMenu>
+    )
+  }, [isMobile, logout, profilePicture])
+
+  if (isMobile) {
+    return (
+      <div className={s.wrapper}>
+        <nav className={s.containerMobile}>
+          <div className={s.toggleWrapper}>
+            <MenuToggle isActive={isMenuOpen} onClick={() => setIsMenuOpen(!isMenuOpen)} />
+            {renderActionMenu()}
+            <motion.div
+              className={s.overlay}
+              animate={{ x: isMenuOpen ? 0 : '-100%', transition: { ease: 'circIn' } }}
+            >
+              <TrackForm />
+            </motion.div>
+
+            <AnimatePresence>
+              {isMenuOpen && (
+                <motion.div
+                  variants={{
+                    visible: { opacity: 0.8 },
+                    hidden: { opacity: 0 },
+                  }}
+                  transition={{ ease: 'circIn' }}
+                  initial='hidden'
+                  animate='visible'
+                  exit='hidden'
+                  className={s.overlayBackground}
+                  onClick={() => setIsMenuOpen(false)}
+                />
+              )}
+            </AnimatePresence>
+          </div>
+        </nav>
+      </div>
+    )
+  }
 
   return (
-    <nav className={s.container}>
-      <div className={s.userInfo}>
-        <ProfilePicture />
-        <h1 className={s.userName}>{user?.firstName}</h1>
-        <span className={s.trackCount}>
-          {isLoadingTracks ? (
-            <SkeletonText
-              text='2 saved tracks'
-              fontSize={12}
-              lineHeight={1.33}
-              className={s.skeletonTrackCount}
-            />
-          ) : (
-            <Pluralize
-              count={tracks.length}
-              singular={`${tracks.length} saved track`}
-              plural={`${tracks.length} saved tracks`}
-            />
-          )}
-        </span>
+    <div className={s.wrapper}>
+      <nav className={s.container}>
+        <div className={s.userInfo}>
+          <RoundImage src={profilePicture} className={s.profilePicture} size='large' />
+          <MenuUserInfo />
+          {renderActionMenu()}
+        </div>
 
-        <ActionMenu className={s.actionMenu}>
-          <ActionMenu.Item id='copy' onAction={() => logout()}>
-            Sair
-          </ActionMenu.Item>
-        </ActionMenu>
-      </div>
-
-      <TrackForm />
-    </nav>
+        <TrackForm />
+      </nav>
+    </div>
   )
 }

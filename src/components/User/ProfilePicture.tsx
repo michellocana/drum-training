@@ -13,5 +13,6 @@ export default function ProfilePicture() {
   if (!user) {
     return null
   }
+
   return <RoundImage src={img} className={s.container} size='large' />
 }
