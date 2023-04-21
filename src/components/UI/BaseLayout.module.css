@@ -7,5 +7,6 @@
 @media screen and (max-width: 940px) {
   .wrapper {
     grid-template-columns: 1fr;
+    grid-template-rows: max-content 1fr;
   }
 }
