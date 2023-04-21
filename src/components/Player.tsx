@@ -12,7 +12,7 @@ export default function Player() {
   const videoId = useYoutubeId(currentTrack?.videoUrl)
 
   if (!videoId) {
-    return <p>Select a song to continue.</p>
+    return null
   }
 
   return (

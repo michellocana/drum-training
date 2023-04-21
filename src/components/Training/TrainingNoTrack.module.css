@@ -1,0 +1,32 @@
+.wrapper {
+  width: 100%;
+  max-width: 430px;
+  margin: 0 auto;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: repeat(3, max-content);
+  gap: 8px;
+  padding: 24px 32px;
+  text-align: center;
+}
+
+.title {
+  composes: h1 from global;
+}
+
+.subtitle {
+  color: var(--white);
+  composes: paragraph from global;
+}
+
+.icon {
+  max-width: 120px;
+  margin: 0 auto;
+}
