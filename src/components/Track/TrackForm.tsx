@@ -14,7 +14,7 @@ import SkeletonTrackCard from '../Skeleton/SkeletonTrackCard'
 export default function TrackForm() {
   const [isAddingTrack, setIsAddingTrack] = useState(false)
   const { user } = useAuth()
-  const { addTrack, isLoading: isLoadingTracks, tracks, userTracks } = useTracks()
+  const { addTrack, isLoading: isLoadingTracks, tracks, userTracks, currentTrack } = useTracks()
   const isMobile = useIsMobile()
 
   const renderAddTrackButton = useCallback(() => {
@@ -76,11 +76,22 @@ export default function TrackForm() {
           ? Array.from({ length: 4 }).map((_, index) => <SkeletonTrackCard key={index} />)
           : userTracks.map((userTrack) => {
               const track = tracks.find((track) => track.id === userTrack.trackId)
-              return track && <TrackCard key={track.id} userTrack={userTrack} track={track} />
+              const isCurrentTrack = currentTrack?.id === track?.id
+
+              return (
+                track && (
+                  <TrackCard
+                    key={track.id}
+                    userTrack={userTrack}
+                    track={track}
+                    isActive={isCurrentTrack}
+                  />
+                )
+              )
             })}
       </ul>
     )
-  }, [isLoadingTracks, tracks, userTracks])
+  }, [currentTrack, isLoadingTracks, tracks, userTracks])
 
   return (
     <div className={s.wrapper}>
