@@ -1,3 +1,4 @@
+import cn from 'classnames'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useCallback, useState } from 'react'
 import { useAuth } from '../../contexts/AuthProvider'
@@ -34,7 +35,7 @@ export default function Menu2() {
             <MenuToggle isActive={isMenuOpen} onClick={() => setIsMenuOpen(!isMenuOpen)} />
             {renderActionMenu()}
             <motion.div
-              className={s.overlay}
+              className={cn(s.overlay, { [s.overlayIsOpen]: isMenuOpen })}
               animate={{ x: isMenuOpen ? 0 : '-100%', transition: { ease: 'circIn' } }}
             >
               <TrackList />
