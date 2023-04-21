@@ -13,6 +13,7 @@ type TrackCardProps = {
   isActive?: boolean
 }
 
+// TODO card edit/delete
 export default function TrackCard({ track, userTrack, isActive }: TrackCardProps) {
   const { selectTrack } = useTracks()
   const thumbnail = useTrackThumbnail(track)

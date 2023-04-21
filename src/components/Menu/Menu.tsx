@@ -3,7 +3,7 @@ import { useCallback, useState } from 'react'
 import { useAuth } from '../../contexts/AuthProvider'
 import useIsMobile from '../../hooks/useIsMobile'
 import useProfilePicture from '../../hooks/useProfilePicture'
-import TrackForm from '../Track/TrackForm'
+import TrackList from '../Track/TrackList'
 import ActionMenu from '../UI/ActionMenu'
 import RoundImage from '../UI/RoundImage'
 import s from './Menu.module.css'
@@ -37,7 +37,7 @@ export default function Menu2() {
               className={s.overlay}
               animate={{ x: isMenuOpen ? 0 : '-100%', transition: { ease: 'circIn' } }}
             >
-              <TrackForm />
+              <TrackList />
             </motion.div>
 
             <AnimatePresence>
@@ -71,7 +71,7 @@ export default function Menu2() {
           {renderActionMenu()}
         </div>
 
-        <TrackForm />
+        <TrackList />
       </nav>
     </div>
   )

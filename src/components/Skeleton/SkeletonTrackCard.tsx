@@ -13,7 +13,7 @@ export default function SkeletonTrackCard() {
 
   return (
     <li className={s.wrapper}>
-      <button className={cn(s.card, s.info)} type='button'>
+      <div className={cn(s.card, s.info)}>
         <SkeletonRoundImage size='small' className={s.image} />
         <SkeletonText
           text={skeletonTrackName}
@@ -31,7 +31,7 @@ export default function SkeletonTrackCard() {
           <LoopIcon />
           <SkeletonText text={skeletonLoopsCount} fontSize={12} lineHeight={1} />
         </span>
-      </button>
+      </div>
     </li>
   )
 }
