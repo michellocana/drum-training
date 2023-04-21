@@ -27,6 +27,7 @@ export default function SkeletonTrackCard() {
           lineHeight={1.33}
           className={s.skeletonArtist}
         />
+
         <span className={s.loops}>
           <LoopIcon />
           <SkeletonText text={skeletonLoopsCount} fontSize={12} lineHeight={1} />

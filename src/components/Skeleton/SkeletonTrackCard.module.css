@@ -1,5 +1,6 @@
 .wrapper {
   composes: wrapper from '../Track/TrackCard.module.css';
+  pointer-events: none;
 }
 
 .card {
