@@ -1,0 +1,17 @@
+.image {
+  background: var(--grey-500);
+  composes: skeleton from global;
+  composes: image from '../UI/RoundImage.module.css';
+}
+
+.imageIsTiny {
+  composes: imageIsTiny from '../UI/RoundImage.module.css';
+}
+
+.imageIsSmall {
+  composes: imageIsSmall from '../UI/RoundImage.module.css';
+}
+
+.imageIsLarge {
+  composes: imageIsLarge from '../UI/RoundImage.module.css';
+}

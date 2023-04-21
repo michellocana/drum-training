@@ -1,0 +1,29 @@
+.wrapper {
+  composes: wrapper from '../Track/TrackCard.module.css';
+}
+
+.card {
+  composes: card from '../Track/TrackCard.module.css';
+}
+
+.info {
+  composes: info from '../Track/TrackCard.module.css';
+}
+
+.image {
+  composes: image from '../Track/TrackCard.module.css';
+}
+
+.loops {
+  composes: loops from '../Track/TrackCard.module.css';
+}
+
+.skeletonName {
+  composes: name from '../Track/TrackCard.module.css';
+  margin-bottom: 2px;
+}
+
+.skeletonArtist {
+  composes: artist from '../Track/TrackCard.module.css';
+  margin-top: 2px;
+}

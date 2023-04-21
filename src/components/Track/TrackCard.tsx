@@ -16,9 +16,7 @@ type TrackCardProps = {
 export default function TrackCard({ track, userTrack, isActive }: TrackCardProps) {
   const { selectTrack } = useTracks()
   const thumbnail = useTrackThumbnail(track)
-  const cardClassName = cn(s.card, s.info, {
-    [s.cardIsActive]: isActive,
-  })
+  const cardClassName = cn(s.card, s.info, { [s.cardIsActive]: isActive })
 
   return (
     <li className={s.wrapper}>

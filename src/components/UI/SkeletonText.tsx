@@ -17,7 +17,7 @@ export default function SkeletonText({ text, className, fontSize, lineHeight }: 
     if (ref.current) {
       setRect(ref.current.getBoundingClientRect())
     }
-  }, [text])
+  }, [text, className, fontSize, lineHeight])
 
   return (
     <span

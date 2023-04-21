@@ -1,3 +1,4 @@
+/* Button reset */
 .buttonReset {
   appearance: none;
   box-shadow: none;
@@ -5,4 +6,42 @@
   cursor: pointer;
   transition: var(--transition);
   background: transparent;
+}
+
+/* Skeleton */
+.skeleton {
+  display: block;
+  border-radius: 4px;
+  background: var(--grey-500);
+  position: relative;
+  overflow: hidden;
+}
+
+.skeleton::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 300%;
+  height: 100%;
+  z-index: 1;
+  background: linear-gradient(
+    to right,
+    transparent,
+    30%,
+    rgba(255, 255, 255, 0.5),
+    70%,
+    transparent
+  );
+  animation: skeletonMove 1s linear infinite;
+}
+
+@keyframes skeletonMove {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-100%);
+  }
 }

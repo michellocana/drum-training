@@ -9,6 +9,7 @@ import TrackCard from './TrackCard'
 import s from './TrackForm.module.css'
 import MenuUserInfo from '../Menu/MenuUserInfo'
 import useIsMobile from '../../hooks/useIsMobile'
+import SkeletonTrackCard from '../Skeleton/SkeletonTrackCard'
 
 export default function TrackForm() {
   const [isAddingTrack, setIsAddingTrack] = useState(false)
@@ -71,28 +72,12 @@ export default function TrackForm() {
   const renderTrackList = useCallback(() => {
     return (
       <ul className={s.trackList}>
-        {isLoadingTracks ? (
-          <TrackCard
-            // TODO make skeleton track card
-            userTrack={{
-              trackId: '1',
-              loops: 20,
-              userId: '1',
-            }}
-            track={{
-              id: '1',
-              artist: 'Thundercat',
-              name: 'Them Changes',
-              userId: '1',
-              videoUrl: 'https://www.youtube.com/watch?v=GNCd_ERZvZM',
-            }}
-          />
-        ) : (
-          userTracks.map((userTrack) => {
-            const track = tracks.find((track) => track.id === userTrack.trackId)
-            return track && <TrackCard key={track.id} userTrack={userTrack} track={track} />
-          })
-        )}
+        {isLoadingTracks
+          ? Array.from({ length: 4 }).map((_, index) => <SkeletonTrackCard key={index} />)
+          : userTracks.map((userTrack) => {
+              const track = tracks.find((track) => track.id === userTrack.trackId)
+              return track && <TrackCard key={track.id} userTrack={userTrack} track={track} />
+            })}
       </ul>
     )
   }, [isLoadingTracks, tracks, userTracks])

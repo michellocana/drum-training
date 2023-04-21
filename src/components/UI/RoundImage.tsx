@@ -1,13 +1,13 @@
 import cn from 'classnames'
 import s from './RoundImage.module.css'
 
-type RoundImageProps = {
+export type RoundImageProps = {
   src: string
   size: 'tiny' | 'small' | 'large'
   className?: string
 }
 
-const ROUND_IMAGE_SIZE: Record<RoundImageProps['size'], number> = {
+export const ROUND_IMAGE_SIZE: Record<RoundImageProps['size'], number> = {
   tiny: 36,
   small: 40,
   large: 60,
