@@ -82,37 +82,6 @@
   composes: formSecondary from global;
 }
 
-.actions {
-  width: var(--track-card-actions-width);
-  position: absolute;
-  top: 0;
-  right: 16px;
-  bottom: 0;
-  margin: auto;
-  display: grid;
-  align-items: center;
-  grid-template-columns: 1fr 1fr;
-  z-index: 1;
-  opacity: 0;
-  visibility: hidden;
-  transition: var(--transition);
-}
-
-.action {
-  width: 26px;
-  height: 26px;
-  padding: 0;
-  background: transparent;
-  composes: buttonReset from global;
-}
-
-.actionIcon {
-  width: 100%;
-  height: 100%;
-  max-width: 24px;
-  max-height: 24px;
-}
-
 .image {
   grid-area: image;
 }
@@ -127,14 +96,6 @@
 .wrapperHasFocus .actions {
   opacity: 1;
   visibility: visible;
-}
-
-.deleteAction {
-  composes: actions;
-  opacity: 1;
-  visibility: visible;
-  width: auto;
-  gap: 8px;
 }
 
 .form {
