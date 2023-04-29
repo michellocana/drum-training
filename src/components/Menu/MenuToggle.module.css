@@ -5,6 +5,7 @@
   padding: 8px 6px;
   z-index: 3;
   position: relative;
+  background-color: transparent;
   composes: buttonReset from global;
 }
 

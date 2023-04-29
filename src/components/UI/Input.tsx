@@ -8,14 +8,21 @@ type InputProps = React.HTMLProps<HTMLInputElement> & {
   name: string
   validate?: FieldValidator
   type?: string
+  containerClassName?: string
 }
 
-export default function Input({ name, validate, type = 'text', ...otherProps }: InputProps) {
+export default function Input({
+  name,
+  validate,
+  containerClassName,
+  type = 'text',
+  ...otherProps
+}: InputProps) {
   const [field, meta] = useField<string>({ name, validate })
   const hasError = !!meta.error && meta.touched
 
   return (
-    <div className={s.container}>
+    <div className={cn(s.container, containerClassName)}>
       <div className={cn(s.fieldWrapper, { [s.fieldWrapperHasError]: hasError })}>
         <input
           {...field}

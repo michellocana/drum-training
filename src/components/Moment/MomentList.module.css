@@ -1,0 +1,22 @@
+.container {
+  display: grid;
+  grid-template-areas:
+    'title add'
+    'list list';
+  grid-template-columns: 1fr min-content;
+  grid-template-rows: max-content max-content;
+}
+
+.list {
+  grid-area: list;
+}
+
+.title {
+  grid-area: title;
+  composes: h2 from global;
+}
+
+.add {
+  grid-area: add;
+  align-self: center;
+}

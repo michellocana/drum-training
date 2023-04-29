@@ -15,7 +15,7 @@ export default function TrainingNoTrack() {
   ]
 
   return (
-    <div className={s.wrapper}>
+    <section className={s.wrapper}>
       <div className={s.container}>
         <svg className={s.icon} viewBox='0 0 280 280'>
           <motion.path
@@ -44,6 +44,6 @@ export default function TrainingNoTrack() {
         <h1 className={s.title}>No track selected</h1>
         <h2 className={s.subtitle}>Select a track to start the training.</h2>
       </div>
-    </div>
+    </section>
   )
 }

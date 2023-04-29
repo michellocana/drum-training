@@ -18,9 +18,10 @@ export default function IconButton({
   size = 'tiny',
   icon,
   isLoading,
+  className,
   ...otherProps
 }: IconButtonProps) {
-  const buttonClassName = cn(s.button, {
+  const buttonClassName = cn(s.button, className, {
     [s.buttonIsTiny]: size === 'tiny',
     [s.buttonIsSmall]: size === 'small',
   })

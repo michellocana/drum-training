@@ -7,7 +7,6 @@
 }
 
 .title {
-  color: var(--white);
   composes: h2 from global;
 }
 

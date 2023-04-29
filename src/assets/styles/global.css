@@ -5,7 +5,6 @@
   border: none;
   cursor: pointer;
   transition: var(--transition);
-  background: transparent;
 }
 
 /* Skeleton */

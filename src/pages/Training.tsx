@@ -1,8 +1,9 @@
-import Controls from '../components/Controls'
-import Moments from '../components/Moment/Moments'
+import MomentList from '../components/Moment/MomentList'
 import Player from '../components/Player'
 import TrainingNoTrack from '../components/Training/TrainingNoTrack'
 import { useTracks } from '../contexts/TracksProvider'
+
+import s from './Training.module.css'
 
 export default function Training() {
   const { currentTrack } = useTracks()
@@ -11,12 +12,15 @@ export default function Training() {
     return <TrainingNoTrack />
   }
 
-  console.log(currentTrack)
   return (
-    <div style={{ padding: 40 }}>
-      <Player />
-      <Moments />
-      <Controls />
-    </div>
+    <section className={s.container}>
+      <h1 className={s.title}>
+        <small className={s.subtitle}>Now training</small>
+        {currentTrack.name} - {currentTrack.artist}
+      </h1>
+
+      <Player className={s.player} />
+      <MomentList className={s.moments} />
+    </section>
   )
 }

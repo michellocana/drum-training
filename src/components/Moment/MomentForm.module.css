@@ -1,0 +1,9 @@
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr) repeat(2, max-content);
+  gap: 8px;
+}
+
+.nameField {
+  grid-column: 1 / -1;
+}
