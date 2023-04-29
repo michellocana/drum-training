@@ -1,8 +1,9 @@
 import cn from 'classnames'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useState } from 'react'
 import editIcon from '../../assets/icons/edit.svg'
 import trashIcon from '../../assets/icons/trash.svg'
 import { useTracks } from '../../contexts/TracksProvider'
+import { useHasFocus } from '../../hooks/useHasFocus'
 import useTrackThumbnail from '../../hooks/useTrackThumbnail'
 import { UserTrack } from '../../types/auth'
 import { Track } from '../../types/track'
@@ -22,10 +23,9 @@ export default function TrackCard({ track, userTrack, isActive }: TrackCardProps
   const [isDeleting, setIsDeleting] = useState(false)
   const [isInDeleteProcess, setIsInDeleteProcess] = useState(false)
   const [isInEditProcess, setIsInEditProcess] = useState(false)
-  const [hasFocus, setHasFocus] = useState(false)
   const { selectTrack, deleteTrack, updateTrack } = useTracks()
   const thumbnail = useTrackThumbnail(track)
-  const ref = useRef<HTMLLIElement>(null)
+  const [hasFocus, setHasFocus, ref] = useHasFocus<HTMLLIElement>()
 
   const renderActions = useCallback(() => {
     if (isInDeleteProcess) {
@@ -68,21 +68,6 @@ export default function TrackCard({ track, userTrack, isActive }: TrackCardProps
       </div>
     )
   }, [deleteTrack, isDeleting, isInDeleteProcess, track])
-
-  useEffect(() => {
-    if (ref.current) {
-      const element = ref.current
-      const onFocusIn = () => setHasFocus(true)
-      const onFocusOut = () => setHasFocus(false)
-      element.addEventListener('focusin', onFocusIn)
-      element.addEventListener('focusout', onFocusOut)
-
-      return () => {
-        element.removeEventListener('focusin', onFocusIn)
-        element.removeEventListener('focusout', onFocusOut)
-      }
-    }
-  }, [])
 
   if (isInEditProcess) {
     return (

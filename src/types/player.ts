@@ -9,6 +9,7 @@ export type PlayerContextType = {
   isPlaying: boolean
   isReady: boolean
   trackInfo?: TrackInfo
+  loopStartTimestamp: number
 }
 
 export type YoutubePlayer = {

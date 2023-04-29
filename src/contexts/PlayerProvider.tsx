@@ -19,6 +19,7 @@ export const PlayerContext = createContext<PlayerContextType>({
   setIsReady: () => {},
   isPlaying: false,
   isReady: false,
+  loopStartTimestamp: 0,
 })
 
 export const playerRef = createRef<YouTube>()
@@ -29,6 +30,7 @@ export default function PlayerProvider({ children }: PropsWithChildren) {
   const [trackInfo, setTrackInfo] = useState<TrackInfo>()
   const [isReady, setIsReady] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
+  const [loopStartTimestamp, setLoopStartTimestamp] = useState(0)
 
   const getInternalPlayer = useCallback(() => {
     return playerRef.current?.getInternalPlayer() as YoutubePlayer | undefined
@@ -38,6 +40,7 @@ export default function PlayerProvider({ children }: PropsWithChildren) {
     if (currentMoment) {
       const player = getInternalPlayer()
       player?.seekTo(currentMoment.start)
+      setLoopStartTimestamp(Date.now())
     }
   }, [currentMoment, getInternalPlayer])
 
@@ -135,6 +138,7 @@ export default function PlayerProvider({ children }: PropsWithChildren) {
         setIsReady,
         isPlaying,
         setIsPlaying,
+        loopStartTimestamp,
       }}
     >
       {children}
