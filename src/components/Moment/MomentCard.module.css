@@ -1,7 +1,28 @@
+.wrapper {
+  position: relative;
+}
+
+.wrapper:hover .actions,
+.wrapperHasFocus .actions {
+  opacity: 1;
+  visibility: visible;
+}
+
 .card {
-  a: a;
+  width: 100%;
+  padding: 0 16px;
+  height: 54px;
+  background: var(--grey-650);
+  border-radius: 5px;
+  text-align: left;
+  color: var(--white);
+  composes: buttonReset from global;
+}
+
+.name {
+  composes: paragraphBold from global;
 }
 
 .duration {
-  a: a;
+  composes: small from global;
 }

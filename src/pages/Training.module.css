@@ -10,7 +10,7 @@
 
 .title {
   grid-area: title;
-  composes: special from global;
+  composes: largeHeavy from global;
 }
 
 .subtitle {

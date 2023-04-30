@@ -15,7 +15,7 @@ type MomentListProps = {
 }
 
 export default function MomentList({ className }: MomentListProps) {
-  const { moments, addMoment } = useMoments()
+  const { moments, addMoment, currentMoment } = useMoments()
   const [isAddingMoment, setIsAddingMoment] = useState(false)
 
   return (
@@ -32,7 +32,7 @@ export default function MomentList({ className }: MomentListProps) {
       />
       <ul className={s.list}>
         {moments?.map((moment) => (
-          <MomentCard key={moment.id} moment={moment} />
+          <MomentCard isActive={currentMoment?.id === moment.id} key={moment.id} moment={moment} />
         ))}
       </ul>
 

@@ -34,7 +34,6 @@
 }
 
 /* Special/Large heavy */
-.special,
 .largeHeavy {
   font-family: var(--open-sans);
   font-style: normal;
@@ -46,7 +45,6 @@
 }
 
 /* Link/Info link */
-.link,
 .info {
   font-family: var(--open-sans);
   font-size: 12px;
@@ -72,6 +70,15 @@
   font-weight: 400;
   font-size: 14px;
   line-height: 1.57;
+}
+
+/* Body/Paragraph Bold */
+.paragraphBold {
+  font-family: var(--open-sans);
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 1.5714285714285714;
+  letter-spacing: 0;
 }
 
 /* Form/Secondary */

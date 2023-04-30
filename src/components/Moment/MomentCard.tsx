@@ -1,19 +1,22 @@
+import cn from 'classnames'
 import { useState } from 'react'
 import useDurationLabel from '../../hooks/useDurationLabel'
 import { Moment } from '../../types/moment'
-import MomentForm from './MomentForm'
-
+import { CardActions } from '../UI/CardActions'
 import s from './MomentCard.module.css'
+import MomentForm from './MomentForm'
+import { useHasFocus } from '../../hooks/useHasFocus'
+import { useMoments } from '../../contexts/MomentsProvider'
 
 type MomentCardProps = {
   moment: Moment
+  isActive: boolean
 }
 
-export default function MomentCard({ moment }: MomentCardProps) {
+export default function MomentCard({ moment, isActive }: MomentCardProps) {
   // const { loopStartTimestamp } = usePlayer()
-  // const { currentMoment } = useMoments()
-  const [isEditingMoment /* , setIsEditingMoment */] = useState(false)
-  // const isCurrentMoment = currentMoment?.id === moment.id
+  const { selectMoment, updateMoment, deleteMoment } = useMoments()
+  const [hasFocus, setHasFocus, ref] = useHasFocus<HTMLLIElement>()
   const start = useDurationLabel(moment.start)
   const end = useDurationLabel(moment.end)
 
@@ -23,27 +26,44 @@ export default function MomentCard({ moment }: MomentCardProps) {
   //   }
   // }, [isCurrentMoment, loopStartTimestamp])
 
-  // TODO show moment info and finish edit form
-  if (isEditingMoment) {
-    return (
-      <MomentForm
-        onCancel={() => {
-          console.log('cancel')
-        }}
-        onSubmit={() => {
-          console.log('submit')
-        }}
-      />
-    )
-  }
-
   return (
-    <li className={s.card}>
-      {moment.name}
+    <CardActions actionsClassName={s.actions} onDelete={() => deleteMoment(moment)}>
+      {({ isInEditProcess, setIsInEditProcess, isInDeleteProcess, renderActions }) => {
+        if (isInEditProcess) {
+          return (
+            <li className={s.wrapper}>
+              <MomentForm
+                initialValues={moment}
+                onCancel={() => setIsInEditProcess(false)}
+                onSubmit={async (values) => {
+                  await updateMoment({ ...moment, ...values })
+                  setIsInEditProcess(false)
+                  setHasFocus(false)
+                  ref.current?.parentElement?.focus()
+                }}
+              />
+            </li>
+          )
+        }
 
-      <small className={s.duration}>
-        {start} - {end}
-      </small>
-    </li>
+        return (
+          <li className={cn(s.wrapper, { [s.wrapperHasFocus]: hasFocus })} ref={ref}>
+            <button className={s.card} onClick={() => selectMoment(moment)} type='button'>
+              <h3 className={s.name} title={moment.name}>
+                {isInDeleteProcess ? 'Are you sure?' : moment.name}
+              </h3>
+
+              {!isInDeleteProcess && (
+                <small className={s.duration}>
+                  {start} - {end}
+                </small>
+              )}
+            </button>
+
+            {renderActions()}
+          </li>
+        )
+      }}
+    </CardActions>
   )
 }
