@@ -1,12 +1,15 @@
+import { useEffect } from 'react'
 import cn from 'classnames'
 import { useMoments } from '../../contexts/MomentsProvider'
 import useDurationLabel from '../../hooks/useDurationLabel'
 import useHasFocus from '../../hooks/useHasFocus'
-import usePlayer from '../../hooks/usePlayer'
 import { Moment } from '../../types/moment'
 import { CardActions } from '../UI/CardActions'
 import s from './MomentCard.module.css'
 import MomentForm from './MomentForm'
+import { motion, useAnimation } from 'framer-motion'
+import { usePlayer } from '../../contexts/PlayerProvider'
+import { PLAYER_INFO_UPDATE_RATE } from '../../constants/player'
 
 type MomentCardProps = {
   moment: Moment
@@ -14,17 +17,30 @@ type MomentCardProps = {
 }
 
 export default function MomentCard({ moment, isActive }: MomentCardProps) {
-  const { startLoop } = usePlayer()
+  const { startLoop, loopStartTimestamp, trackInfo } = usePlayer()
   const { selectMoment, updateMoment, deleteMoment } = useMoments()
   const [hasFocus, setHasFocus, ref] = useHasFocus<HTMLLIElement>()
   const start = useDurationLabel(moment.start)
   const end = useDurationLabel(moment.end)
+  const animation = useAnimation()
 
-  // useEffect(() => {
-  //   if (isCurrentMoment) {
-  //     console.log('loop start', loopStartTimestamp)
-  //   }
-  // }, [isCurrentMoment, loopStartTimestamp])
+  useEffect(() => {
+    animation.set({ x: 0, transition: { duration: 0, ease: 'linear' } })
+  }, [animation, loopStartTimestamp])
+
+  useEffect(() => {
+    if (isActive && trackInfo) {
+      const loopDuration = moment.end - moment.start
+      const loopProgress = trackInfo.time - moment.start
+      const x = Math.min(100, (loopProgress * 100) / loopDuration)
+      animation.start({
+        x: x + '%',
+        transition: { duration: PLAYER_INFO_UPDATE_RATE / 1000, ease: 'linear' },
+      })
+
+      return () => animation.stop()
+    }
+  }, [animation, isActive, moment, trackInfo])
 
   return (
     <CardActions actionsClassName={s.actions} onDelete={() => deleteMoment(moment)}>
@@ -58,6 +74,13 @@ export default function MomentCard({ moment, isActive }: MomentCardProps) {
               }}
               type='button'
             >
+              {isActive && (
+                <motion.div
+                  animate={animation}
+                  className={cn(s.progress, { [s.progressIsHidden]: isInDeleteProcess })}
+                />
+              )}
+
               <h3 className={s.name} title={moment.name}>
                 {isInDeleteProcess ? (
                   <>

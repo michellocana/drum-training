@@ -1,8 +1,7 @@
 import YouTube from 'react-youtube'
 import { useMoments } from '../contexts/MomentsProvider'
-import { playerRef } from '../contexts/PlayerProvider'
+import { playerRef, usePlayer } from '../contexts/PlayerProvider'
 import { useTracks } from '../contexts/TracksProvider'
-import usePlayer from '../hooks/usePlayer'
 import useYoutubeId from '../hooks/useYoutubeId'
 import Controls from './Controls'
 
@@ -15,7 +14,7 @@ type PlayerProps = {
 export default function Player({ className }: PlayerProps) {
   const { currentTrack } = useTracks()
   const { currentMoment } = useMoments()
-  const { startLoop, setIsReady, setIsPlaying } = usePlayer()
+  const { startLoop, setIsReady, setIsPlaying, setLoopStartTimestamp } = usePlayer()
   const videoId = useYoutubeId(currentTrack?.videoUrl)
 
   if (!videoId) {
@@ -32,6 +31,11 @@ export default function Player({ className }: PlayerProps) {
         onEnd={() => startLoop()}
         onPlay={() => setIsPlaying(true)}
         onPause={() => setIsPlaying(false)}
+        onStateChange={(event) => {
+          if (event.data === YouTube.PlayerState.PLAYING) {
+            setLoopStartTimestamp(Date.now())
+          }
+        }}
         className={s.player}
       />
 

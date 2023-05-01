@@ -6,6 +6,7 @@ export type PlayerContextType = {
   setPlaybackRate(rate: PlaybackRate): void
   setIsPlaying: Dispatch<SetStateAction<boolean>>
   setIsReady: Dispatch<SetStateAction<boolean>>
+  setLoopStartTimestamp: Dispatch<SetStateAction<number>>
   isPlaying: boolean
   isReady: boolean
   trackInfo?: TrackInfo

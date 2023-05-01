@@ -5,11 +5,13 @@ import {
   useCallback,
   useEffect,
   useState,
+  useContext,
 } from 'react'
 import YouTube from 'react-youtube'
 import { PlaybackRate, PlayerContextType, TrackInfo, YoutubePlayer } from '../types/player'
 import { useMoments } from './MomentsProvider'
 import { useTracks } from './TracksProvider'
+import { PLAYER_INFO_UPDATE_RATE } from '../constants/player'
 
 export const PlayerContext = createContext<PlayerContextType>({
   startLoop: () => {},
@@ -17,6 +19,7 @@ export const PlayerContext = createContext<PlayerContextType>({
   setPlaybackRate: () => {},
   setIsPlaying: () => {},
   setIsReady: () => {},
+  setLoopStartTimestamp: () => {},
   isPlaying: false,
   isReady: false,
   loopStartTimestamp: 0,
@@ -40,7 +43,6 @@ export default function PlayerProvider({ children }: PropsWithChildren) {
     if (currentMoment) {
       const player = getInternalPlayer()
       player?.seekTo(currentMoment.start)
-      setLoopStartTimestamp(Date.now())
     }
   }, [currentMoment, getInternalPlayer])
 
@@ -107,7 +109,7 @@ export default function PlayerProvider({ children }: PropsWithChildren) {
               }
             }
           })
-        }, 1000)
+        }, PLAYER_INFO_UPDATE_RATE)
       }, timeToNextSecond)
     }
 
@@ -139,9 +141,14 @@ export default function PlayerProvider({ children }: PropsWithChildren) {
         isPlaying,
         setIsPlaying,
         loopStartTimestamp,
+        setLoopStartTimestamp,
       }}
     >
       {children}
     </PlayerContext.Provider>
   )
+}
+
+export function usePlayer() {
+  return useContext(PlayerContext)
 }
