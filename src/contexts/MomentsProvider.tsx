@@ -30,13 +30,13 @@ const MomentsContext = createContext<MomentContextType>({
   updateMoment: noop,
   deleteMoment: noop,
   selectMoment: noop,
-  isLoading: false,
+  isLoading: true,
 })
 
 export default function MomentsProvider({ children }: PropsWithChildren) {
   const [moments, setMoments] = useState<Moment[]>([])
-  const [isLoading, setIsLoading] = useState(false)
-  const [currentMoment, setCurrentMoment] = useState<Moment | undefined>()
+  const [isLoading, setIsLoading] = useState(true)
+  const [currentMoment, setCurrentMoment] = useState<Moment | null>(null)
   const db = useMemo(() => getFirestore(app), [])
   const { currentTrack } = useTracks()
 
@@ -70,25 +70,27 @@ export default function MomentsProvider({ children }: PropsWithChildren) {
   }, [])
 
   useEffect(() => {
-    if (!isLoading && currentTrack) {
+    if (currentTrack) {
+      setMoments([])
+      setCurrentMoment(null)
+      setIsLoading(true)
+
       const momentsRef = collection(db, DatabaseEntities.Moments) as CollectionReference<Moment>
       const momentsQuery = query(momentsRef, where('trackId', '==', currentTrack.id))
       const unsubscribe = onSnapshot(momentsQuery, (snapshot) => {
-        setIsLoading(true)
-
         const newMoments = snapshot.docs.map((doc) => ({
           ...doc.data(),
           id: doc.id,
         }))
 
         setMoments(newMoments)
-        setCurrentMoment(newMoments.at(0))
+        setCurrentMoment(newMoments.at(0) ?? null)
         setIsLoading(false)
       })
 
       return () => unsubscribe()
     }
-  }, [db, isLoading, currentTrack])
+  }, [db, currentTrack])
 
   return (
     <MomentsContext.Provider

@@ -1,6 +1,6 @@
 import cn from 'classnames'
 import { useTracks } from '../../contexts/TracksProvider'
-import { useHasFocus } from '../../hooks/useHasFocus'
+import useHasFocus from '../../hooks/useHasFocus'
 import useTrackThumbnail from '../../hooks/useTrackThumbnail'
 import { UserTrack } from '../../types/auth'
 import { Track } from '../../types/track'

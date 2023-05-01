@@ -1,12 +1,12 @@
 import cn from 'classnames'
-import { useState } from 'react'
+import { useMoments } from '../../contexts/MomentsProvider'
 import useDurationLabel from '../../hooks/useDurationLabel'
+import useHasFocus from '../../hooks/useHasFocus'
+import usePlayer from '../../hooks/usePlayer'
 import { Moment } from '../../types/moment'
 import { CardActions } from '../UI/CardActions'
 import s from './MomentCard.module.css'
 import MomentForm from './MomentForm'
-import { useHasFocus } from '../../hooks/useHasFocus'
-import { useMoments } from '../../contexts/MomentsProvider'
 
 type MomentCardProps = {
   moment: Moment
@@ -14,7 +14,7 @@ type MomentCardProps = {
 }
 
 export default function MomentCard({ moment, isActive }: MomentCardProps) {
-  // const { loopStartTimestamp } = usePlayer()
+  const { startLoop } = usePlayer()
   const { selectMoment, updateMoment, deleteMoment } = useMoments()
   const [hasFocus, setHasFocus, ref] = useHasFocus<HTMLLIElement>()
   const start = useDurationLabel(moment.start)
@@ -36,7 +36,9 @@ export default function MomentCard({ moment, isActive }: MomentCardProps) {
                 initialValues={moment}
                 onCancel={() => setIsInEditProcess(false)}
                 onSubmit={async (values) => {
-                  await updateMoment({ ...moment, ...values })
+                  const newMoment = { ...moment, ...values }
+                  await updateMoment(newMoment)
+                  selectMoment(newMoment)
                   setIsInEditProcess(false)
                   setHasFocus(false)
                   ref.current?.parentElement?.focus()
@@ -48,9 +50,24 @@ export default function MomentCard({ moment, isActive }: MomentCardProps) {
 
         return (
           <li className={cn(s.wrapper, { [s.wrapperHasFocus]: hasFocus })} ref={ref}>
-            <button className={s.card} onClick={() => selectMoment(moment)} type='button'>
+            <button
+              className={s.card}
+              onClick={() => {
+                selectMoment(moment)
+                startLoop()
+              }}
+              type='button'
+            >
               <h3 className={s.name} title={moment.name}>
-                {isInDeleteProcess ? 'Are you sure?' : moment.name}
+                {isInDeleteProcess ? (
+                  <>
+                    Deleting "{moment.name}"
+                    <br />
+                    Are you sure?
+                  </>
+                ) : (
+                  moment.name
+                )}
               </h3>
 
               {!isInDeleteProcess && (

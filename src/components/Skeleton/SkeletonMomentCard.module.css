@@ -1,0 +1,16 @@
+.wrapper {
+  composes: skeleton from global;
+  composes: wrapper from '../Moment/MomentCard.module.css';
+}
+
+.card {
+  composes: card from '../Moment/MomentCard.module.css';
+}
+
+.name {
+  composes: name from '../Moment/MomentCard.module.css';
+}
+
+.duration {
+  composes: duration from '../Moment/MomentCard.module.css';
+}

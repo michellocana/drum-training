@@ -4,11 +4,21 @@
     'title add'
     'list list';
   grid-template-columns: 1fr min-content;
-  grid-template-rows: max-content max-content;
+  grid-template-rows: repeat(2, max-content);
   gap: 17px 0;
 }
 
+.containerIsAddingMoment {
+  grid-template-rows: repeat(3, max-content);
+  grid-template-areas:
+    'title add'
+    'form form'
+    'list list';
+}
+
 .list {
+  display: grid;
+  gap: 8px;
   grid-area: list;
   list-style: none;
   padding: 0;
@@ -23,4 +33,15 @@
 .add {
   grid-area: add;
   align-self: center;
+}
+
+.form {
+  display: grid;
+  grid-area: form;
+  grid-template-columns: repeat(2, 1fr) min-content min-content;
+  gap: 8px;
+}
+
+.nameField {
+  grid-column: 1 / -1;
 }

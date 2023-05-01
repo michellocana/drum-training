@@ -1,6 +1,6 @@
 import { Dispatch, RefObject, SetStateAction, useEffect, useRef, useState } from 'react'
 
-export function useHasFocus<T extends HTMLElement>(): [
+export default function useHasFocus<T extends HTMLElement>(): [
   boolean,
   Dispatch<SetStateAction<boolean>>,
   RefObject<T>,

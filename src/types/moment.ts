@@ -14,6 +14,6 @@ export type MomentContextType = {
   deleteMoment(moment: Moment): Promise<void>
   selectMoment(moment: Moment): void
   moments?: Moment[]
-  currentMoment?: Moment
+  currentMoment?: Moment | null
   isLoading: boolean
 }

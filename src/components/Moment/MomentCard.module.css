@@ -1,5 +1,7 @@
 .wrapper {
   position: relative;
+  border-radius: 5px;
+  overflow: hidden;
 }
 
 .wrapper:hover .actions,
@@ -9,20 +11,27 @@
 }
 
 .card {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr repeat(2, max-content) 1fr;
+  gap: 8px;
   width: 100%;
   padding: 0 16px;
   height: 54px;
   background: var(--grey-650);
-  border-radius: 5px;
   text-align: left;
   color: var(--white);
   composes: buttonReset from global;
 }
 
 .name {
+  line-height: 1;
+  grid-row: 2;
   composes: paragraphBold from global;
 }
 
 .duration {
+  line-height: 0.9;
+  grid-row: 3;
   composes: small from global;
 }

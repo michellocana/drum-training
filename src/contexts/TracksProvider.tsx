@@ -128,11 +128,11 @@ export default function TracksProvider({ children }: PropsWithChildren) {
   }, [db, isInitialFetch, isLogged, userTracks])
 
   // TODO remove this after layout is finished
-  useEffect(() => {
-    if (tracks.length) {
-      setCurrentTrack(tracks.at(-1))
-    }
-  }, [tracks])
+  // useEffect(() => {
+  //   if (tracks.length) {
+  //     setCurrentTrack(tracks.at(-1))
+  //   }
+  // }, [tracks])
 
   return (
     <TracksContext.Provider
