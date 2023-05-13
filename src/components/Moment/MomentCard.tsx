@@ -69,8 +69,12 @@ export default function MomentCard({ moment, isActive }: MomentCardProps) {
             <button
               className={s.card}
               onClick={() => {
-                selectMoment(moment)
-                startLoop()
+                if (isActive) {
+                  selectMoment(null)
+                } else {
+                  selectMoment(moment)
+                  startLoop()
+                }
               }}
               type='button'
             >

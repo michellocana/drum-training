@@ -65,7 +65,7 @@ export default function MomentsProvider({ children }: PropsWithChildren) {
     [db],
   )
 
-  const selectMoment = useCallback((moment: Moment) => {
+  const selectMoment = useCallback((moment: Moment | null) => {
     setCurrentMoment(moment)
   }, [])
 
