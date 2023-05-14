@@ -1,0 +1,17 @@
+{
+  "files": {
+    "main.css": "/drum-training/static/css/main.f94d0765.css",
+    "main.js": "/drum-training/static/js/main.fc020b6c.js",
+    "static/media/trash.svg": "/drum-training/static/media/trash.f6ac9783ad7d26c91a02bd66f30ed14e.svg",
+    "index.html": "/drum-training/index.html",
+    "static/media/edit.svg": "/drum-training/static/media/edit.b25046f96c0603931a0f9dce4ae46553.svg",
+    "static/media/action.svg": "/drum-training/static/media/action.90aaa6b1b901a9f62136aec1d65134a1.svg",
+    "static/media/error.svg": "/drum-training/static/media/error.5a2eac59dd7c7f699b280c04dcd15f3a.svg",
+    "main.f94d0765.css.map": "/drum-training/static/css/main.f94d0765.css.map",
+    "main.fc020b6c.js.map": "/drum-training/static/js/main.fc020b6c.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.f94d0765.css",
+    "static/js/main.fc020b6c.js"
+  ]
+}
