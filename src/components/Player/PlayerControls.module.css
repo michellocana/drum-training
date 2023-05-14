@@ -1,0 +1,56 @@
+.container {
+  padding: 0;
+  list-style: none;
+  display: grid;
+  align-items: center;
+  gap: 4px;
+  grid-template-columns: repeat(7, max-content);
+  margin: 0 auto;
+}
+
+.actionButton,
+.playbackRate {
+  background: transparent;
+  composes: buttonReset from global;
+}
+
+.actionIcon:hover,
+.actionIcon:focus-visible,
+.playbackRate:hover,
+.playbackRate:focus-visible {
+  color: var(--blue-400);
+}
+
+.actionButton {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.actionIcon {
+  width: 100%;
+  max-width: 20px;
+  max-height: 20px;
+  color: var(--white);
+  transition: var(--transition);
+}
+
+.playbackRate {
+  width: 48px;
+  height: 48px;
+  font-family: var(--open-sans);
+  font-style: normal;
+  font-weight: 800;
+  font-size: 14px;
+  line-height: 1.14;
+  color: var(--white);
+}
+
+.playbackRateIsActive,
+.playbackRateIsActive:hover,
+.playbackRateIsActive:focus-visible {
+  color: var(--blue-500);
+}

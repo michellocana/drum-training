@@ -1,7 +1,8 @@
 import { Dispatch, SetStateAction } from 'react'
+import { Moment } from './moment'
 
 export type PlayerContextType = {
-  startLoop(): void
+  startLoop(moment: Moment): void
   togglePlay(): void
   setPlaybackRate(rate: PlaybackRate): void
   setIsPlaying: Dispatch<SetStateAction<boolean>>
@@ -9,15 +10,16 @@ export type PlayerContextType = {
   setLoopStartTimestamp: Dispatch<SetStateAction<number>>
   isPlaying: boolean
   isReady: boolean
-  trackInfo?: TrackInfo
+  playbackRate: PlaybackRate
   loopStartTimestamp: number
+  trackInfo?: TrackInfo
 }
 
 export type YoutubePlayer = {
-  seekTo(time: number): void
-  setPlaybackRate(rate: number): void
-  playVideo(): void
-  pauseVideo(): void
+  seekTo(time: number): Promise<void>
+  setPlaybackRate(rate: number): Promise<void>
+  playVideo(): Promise<void>
+  pauseVideo(): Promise<void>
   getDuration(): Promise<number>
   getCurrentTime(): Promise<number>
   addEventListener(event: string, listener: (event: { data: unknown }) => void): void

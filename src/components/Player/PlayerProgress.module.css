@@ -1,0 +1,87 @@
+.container {
+  width: 100%;
+  max-width: 294px;
+  height: 32px;
+  background-color: var(--grey-600);
+  border-radius: 5px;
+  margin: 0 auto;
+  composes: shadowDark from global;
+  position: relative;
+}
+
+.moment {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  border-radius: inherit;
+  transition: var(--transition);
+  opacity: 0.6;
+  background-color: transparent;
+  composes: shadow from global;
+  composes: buttonReset from global;
+}
+
+.moment::before,
+.moment::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transition: var(--transition);
+  border-radius: 5px;
+}
+
+.moment::before {
+  background: linear-gradient(270deg, var(--grey-100) 0%, var(--grey-200) 100%);
+}
+
+.moment::after {
+  opacity: 0;
+  background: linear-gradient(270deg, var(--blue-600) 0%, var(--blue-700) 100%);
+}
+
+.momentIsActive::before {
+  opacity: 0;
+}
+
+.momentIsActive::after {
+  opacity: 1;
+}
+
+.moment:hover,
+.moment:focus-visible,
+.momentIsActive {
+  opacity: 1;
+}
+
+.progress {
+  position: absolute;
+  top: 0;
+  width: 2px;
+  height: 100%;
+  background: var(--grey-200);
+  position: relative;
+}
+
+.progress::before,
+.progress::after {
+  content: '';
+  position: absolute;
+  left: 1px;
+  width: 0;
+  height: 0;
+  border: 8px solid var(--grey-200);
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  transform: translateX(-50%);
+  border-radius: 5px;
+}
+
+.progress::before {
+  top: -5px;
+  border-bottom: none;
+}
+
+.progress::after {
+  bottom: -5px;
+  border-top: none;
+}

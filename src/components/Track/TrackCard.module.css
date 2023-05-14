@@ -71,7 +71,7 @@
   grid-area: loops;
   align-self: center;
   display: grid;
-  grid-template-columns: repeat(2, max-content);
+  grid-template-columns: 12px max-content;
   gap: 3px;
   justify-content: end;
   align-items: end;

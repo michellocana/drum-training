@@ -21,6 +21,8 @@
 
 .player {
   grid-area: player;
+  display: grid;
+  gap: 31px;
 }
 
 .moments {

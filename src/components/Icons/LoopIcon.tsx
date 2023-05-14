@@ -2,14 +2,7 @@ import { SVGAttributes } from 'react'
 
 export default function LoopIcon(props: SVGAttributes<SVGElement>) {
   return (
-    <svg
-      xmlns='http://www.w3.org/2000/svg'
-      width='12'
-      height='12'
-      fill='none'
-      viewBox='0 0 12 12'
-      {...props}
-    >
+    <svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 12 12' {...props}>
       <path
         fill='currentColor'
         fillRule='evenodd'

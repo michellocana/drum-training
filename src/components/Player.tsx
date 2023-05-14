@@ -1,11 +1,8 @@
-import YouTube from 'react-youtube'
-import { useMoments } from '../contexts/MomentsProvider'
-import { playerRef, usePlayer } from '../contexts/PlayerProvider'
 import { useTracks } from '../contexts/TracksProvider'
 import useYoutubeId from '../hooks/useYoutubeId'
-import Controls from './Controls'
-
-import s from './Player.module.css'
+import PlayerControls from './Player/PlayerControls'
+import PlayerProgress from './Player/PlayerProgress'
+import PlayerVideo from './Player/PlayerVideo'
 
 type PlayerProps = {
   className: string
@@ -13,8 +10,6 @@ type PlayerProps = {
 
 export default function Player({ className }: PlayerProps) {
   const { currentTrack } = useTracks()
-  const { currentMoment } = useMoments()
-  const { startLoop, setIsReady, setIsPlaying, setLoopStartTimestamp } = usePlayer()
   const videoId = useYoutubeId(currentTrack?.videoUrl)
 
   if (!videoId) {
@@ -23,23 +18,9 @@ export default function Player({ className }: PlayerProps) {
 
   return (
     <div className={className}>
-      <YouTube
-        ref={playerRef}
-        videoId={videoId}
-        opts={{ playerVars: { end: currentMoment?.end, modestbranding: 1 } }}
-        onReady={() => setIsReady(true)}
-        onEnd={() => startLoop()}
-        onPlay={() => setIsPlaying(true)}
-        onPause={() => setIsPlaying(false)}
-        onStateChange={(event) => {
-          if (event.data === YouTube.PlayerState.PLAYING) {
-            setLoopStartTimestamp(Date.now())
-          }
-        }}
-        className={s.player}
-      />
-
-      <Controls />
+      <PlayerVideo videoId={videoId} />
+      <PlayerProgress />
+      <PlayerControls />
     </div>
   )
 }

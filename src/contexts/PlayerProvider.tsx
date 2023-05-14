@@ -12,6 +12,7 @@ import { PlaybackRate, PlayerContextType, TrackInfo, YoutubePlayer } from '../ty
 import { useMoments } from './MomentsProvider'
 import { useTracks } from './TracksProvider'
 import { PLAYER_INFO_UPDATE_RATE } from '../constants/player'
+import { Moment } from '../types/moment'
 
 export const PlayerContext = createContext<PlayerContextType>({
   startLoop: () => {},
@@ -22,6 +23,7 @@ export const PlayerContext = createContext<PlayerContextType>({
   setLoopStartTimestamp: () => {},
   isPlaying: false,
   isReady: false,
+  playbackRate: '1',
   loopStartTimestamp: 0,
 })
 
@@ -34,22 +36,17 @@ export default function PlayerProvider({ children }: PropsWithChildren) {
   const [isReady, setIsReady] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
   const [loopStartTimestamp, setLoopStartTimestamp] = useState(0)
+  const [playbackRate, setPlaybackRate] = useState<PlaybackRate>('1')
 
   const getInternalPlayer = useCallback(() => {
     return playerRef.current?.getInternalPlayer() as YoutubePlayer | undefined
   }, [])
 
-  const startLoop = useCallback(() => {
-    if (currentMoment) {
+  const startLoop = useCallback(
+    async (moment: Moment) => {
       const player = getInternalPlayer()
-      player?.seekTo(currentMoment.start)
-    }
-  }, [currentMoment, getInternalPlayer])
-
-  const setPlaybackRate = useCallback(
-    (rate: PlaybackRate) => {
-      const player = getInternalPlayer()
-      player?.setPlaybackRate(Number(rate))
+      await player?.playVideo()
+      await player?.seekTo(moment.start)
     },
     [getInternalPlayer],
   )
@@ -62,7 +59,7 @@ export default function PlayerProvider({ children }: PropsWithChildren) {
   // Initial loop control
   useEffect(() => {
     if (isReady && currentMoment) {
-      startLoop()
+      startLoop(currentMoment)
     }
   }, [currentMoment, isReady, startLoop])
 
@@ -129,6 +126,12 @@ export default function PlayerProvider({ children }: PropsWithChildren) {
     }
   }, [getInternalPlayer, isPlaying])
 
+  // Playback rate update
+  useEffect(() => {
+    const player = getInternalPlayer()
+    player?.setPlaybackRate(Number(playbackRate))
+  }, [getInternalPlayer, playbackRate])
+
   return (
     <PlayerContext.Provider
       value={{
@@ -142,6 +145,7 @@ export default function PlayerProvider({ children }: PropsWithChildren) {
         setIsPlaying,
         loopStartTimestamp,
         setLoopStartTimestamp,
+        playbackRate,
       }}
     >
       {children}
